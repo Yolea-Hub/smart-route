@@ -1,6 +1,6 @@
 # Déploiement du site Smart Route (smartroute.yolea.ai)
 
-Site statique (HTML, CSS, un fichier JavaScript) servi par un Worker `smart-route-site` qui ne contient que des fichiers : aucun code serveur. Le domaine `smartroute.yolea.ai` est un Custom Domain du Worker. Rien ne se déploie depuis l'intégration continue : le déploiement est un geste manuel, après relecture.
+Site statique (HTML, CSS, un fichier JavaScript) servi par un Worker `smart-route-site` : les pages sont des fichiers statiques, et un petit script (`deploy/worker.js`) sert seulement `/dl/*`, les installeurs copiés dans un seau R2 privé. Le domaine `smartroute.yolea.ai` est un Custom Domain du Worker. Rien ne se déploie depuis l'intégration continue : le déploiement est un geste manuel, après relecture.
 
 ## Ce qu'il y a dans le dossier `site/`
 
@@ -10,19 +10,20 @@ Site statique (HTML, CSS, un fichier JavaScript) servi par un Worker `smart-rout
 | `kit/` | Copie du sous-ensemble du kit Sogoma que le site charge. Écrite par `scripts/sync-kit.sh`, jamais à la main |
 | `build.sh` | Assemble `dist/` : `public/` + `kit/` + les logos que les pages nomment, avec `?v=<empreinte>` sur les feuilles et scripts |
 | `dist/`, `dist.stamp` | Le résultat, et sa fiche (empreinte des sources, commit). Non versionnés |
-| `deploy/wrangler.jsonc` | Worker, Custom Domain, `workers_dev: false`, `preview_urls: false` |
+| `deploy/wrangler.jsonc` | Worker, Custom Domain, seau R2 `smart-route-downloads` (liaison `DL`), `run_worker_first: ["/dl/*"]`, `workers_dev: false`, `preview_urls: false` |
+| `deploy/worker.js` | Sert `/dl/latest.json` et `/dl/v<version>/<fichier>` depuis R2 (plages d'octets, ETag, 206/304/416) ; tout le reste va aux fichiers statiques. Testé par `site/tests/worker.test.mjs` |
 | `deploy/guard-fresh-build.sh` | Refuse de déployer une construction absente, incomplète, plus ancienne que ses sources, ou issue d'un autre commit |
 
 ## Une fois, avant le premier déploiement
 
 1. Compte Cloudflare du propriétaire, zone `yolea.ai` dans ce compte. Connexion de wrangler : `pnpm exec wrangler login` (geste du propriétaire).
 2. Le Custom Domain `smartroute.yolea.ai` crée seul l'enregistrement DNS et le certificat. Aucun enregistrement `smartroute` ne doit exister avant : sinon le premier déploiement échoue, supprimer l'ancien enregistrement.
-3. Les téléchargements viennent des Releases GitHub publiques du dépôt `Yolea-Hub/smart-route` (plus de seau R2, plus de domaine `downloads.`). Rien à configurer côté Cloudflare : la page lit l'API publique de GitHub et la politique CSP l'autorise (`connect-src`). Le dépôt doit être public et une release publiée par le workflow `release.yml` (étiquette `v*`) ; tant qu'il n'y en a pas, le site affiche « Bientôt disponible ».
+3. Les Releases GitHub publiques du dépôt `Yolea-Hub/smart-route` restent la source. Le seau R2 privé `smart-route-downloads` (`pnpm exec wrangler r2 bucket create smart-route-downloads`) en reçoit une copie, servie par le Worker sous `smartroute.yolea.ai/dl/` (même origine, pas de nouveau domaine, pas de changement de CSP). Si le seau est vide ou absent, la page se rabat sur l'API publique de GitHub (la CSP l'autorise : `connect-src`). Une release est publiée par le workflow `release.yml` (étiquette `v*`) ; tant qu'il n'y en a pas, le site affiche « Bientôt disponible ».
 4. Dépendances du déploiement : `cd site/deploy && pnpm install --ignore-workspace`.
 
 ## Comment la page trouve les téléchargements
 
-`site.js` lit `https://api.github.com/repos/Yolea-Hub/smart-route/releases/latest` (sans jeton, sans cookie). Il reconnaît les fichiers par les noms qu'écrit electron-builder (`artifactName` : `Smart-Route-<version>-<os>-<arch>.<ext>`) :
+`site.js` lit d'abord `/dl/latest.json` (même origine : version, date, et pour chaque fichier nom, taille, SHA-256 et lien `/dl/v<version>/<nom>`). Le fichier est strictement validé ; absent ou invalide, la page lit `https://api.github.com/repos/Yolea-Hub/smart-route/releases/latest` (sans jeton, sans cookie). Il reconnaît les fichiers par les noms qu'écrit electron-builder (`artifactName` : `Smart-Route-<version>-<os>-<arch>.<ext>`) :
 
 | Fichier | Système |
 |---|---|
@@ -31,11 +32,27 @@ Site statique (HTML, CSS, un fichier JavaScript) servi par un Worker `smart-rout
 | `Smart-Route-0.1.0-win-x64.exe` | Windows 64 bits |
 | `Smart-Route-0.1.0-mac-arm64.dmg`, `Smart-Route-0.1.0-mac-x64.dmg` | macOS Apple Silicon, Intel |
 
-- La taille vient du champ `size` de l'API. L'empreinte SHA-256 vient du fichier `SHA256SUMS` de la release, lu par son `browser_download_url` ; si le navigateur refuse (CORS), la page montre un lien vers `SHA256SUMS`.
+- Avec le miroir, taille et SHA-256 viennent de `latest.json` et la page ne contacte aucun tiers. Avec le repli GitHub, la taille vient du champ `size` de l'API. L'empreinte SHA-256 vient du fichier `SHA256SUMS` de la release, lu par son `browser_download_url` ; si le navigateur refuse (CORS), la page montre un lien vers `SHA256SUMS`.
 - Seuls sont acceptés les liens `https://github.com/Yolea-Hub/smart-route/releases/download/...` (sans paramètres), un nom conforme au motif ci-dessus et une taille plausible. Brouillons et préversions sont ignorés.
 - Aucune release (404) : « Bientôt disponible ». Limite de débit de l'API (403/429, 60 requêtes par heure et par adresse) : même message, avec un lien vers la page des versions.
 - Contrôle du comportement sans navigateur : `node --test site/tests/site-downloads.test.mjs`.
 - La CSP (`public/_headers`) autorise `connect-src 'self' https://api.github.com https://github.com https://objects.githubusercontent.com https://release-assets.githubusercontent.com` : l'API, la redirection de téléchargement de `SHA256SUMS` et son hébergement.
+
+## Publier une version dans le miroir R2
+
+Après chaque release GitHub (le workflow `release.yml` a publié les installeurs et `SHA256SUMS`), depuis la racine du dépôt :
+
+```bash
+scripts/mirror-release.sh --dry-run v0.2.1   # télécharge (16 plages par fichier), vérifie les SHA-256, prépare latest.json ; n'envoie rien
+scripts/mirror-release.sh v0.2.1             # idem, puis envoie v0.2.1/<fichiers> dans R2, et latest.json EN DERNIER
+scripts/mirror-release.sh --from-dir <dossier> v0.2.1   # sans téléchargement : réutilise des fichiers déjà là (ils sont revérifiés)
+```
+
+Le script refuse une étiquette dont une somme de contrôle ne correspond pas, ou qui n'a pas de `SHA256SUMS`. Il est rejouable sans risque. Il faut la connexion de wrangler (`pnpm exec wrangler login`) ou `CLOUDFLARE_API_TOKEN` et `CLOUDFLARE_ACCOUNT_ID`.
+
+Automatique, plus tard : `release.yml` a une étape « Mirror to Cloudflare R2 » qui ne tourne que si le secret `CLOUDFLARE_API_TOKEN` existe (sinon elle laisse une note). Pour l'activer, le propriétaire crée un jeton d'API avec la permission *Workers R2 Storage : Edit* sur le compte Yolea, puis `gh secret set CLOUDFLARE_API_TOKEN` et `gh secret set CLOUDFLARE_ACCOUNT_ID`.
+
+Contrôle après un envoi : `curl -sI https://smartroute.yolea.ai/dl/latest.json` répond 200 (JSON) ; `curl -sI .../dl/v0.2.1/Smart-Route-0.2.1-linux-amd64.deb` répond 200 avec `content-length` et `accept-ranges: bytes` ; avec `-H 'Range: bytes=0-99'` il répond 206.
 
 ## Déployer
 

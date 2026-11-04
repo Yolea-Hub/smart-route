@@ -1,9 +1,10 @@
 {
 	"$schema": "./node_modules/wrangler/config-schema.json",
-	// Landing page of Smart Route (smartroute.yolea.ai): static assets only, no Worker code.
+	// Landing page of Smart Route (smartroute.yolea.ai): static assets, plus worker.js which serves /dl/* (the installers mirrored in R2) and nothing else.
 	// Deploy by hand: `pnpm run deploy` from this folder (builds, runs the guard, then `wrangler deploy`). Nothing deploys from CI.
 	"name": "smart-route-site",
 	"compatibility_date": "2026-10-30",
+	"main": "worker.js",
 	// No workers.dev or version (preview) URLs: the site answers on its own domain only.
 	"workers_dev": false,
 	"preview_urls": false,
@@ -14,8 +15,13 @@
 	"observability": { "enabled": false },
 	// Wrangler runs the guard itself, from this folder, before any deploy: a bare `wrangler deploy` is guarded too.
 	"build": { "command": "bash guard-fresh-build.sh ../dist" },
+	// Private bucket, reachable only through this Worker. Filled by scripts/mirror-release.sh (never from the page).
+	"r2_buckets": [{ "binding": "DL", "bucket_name": "smart-route-downloads" }],
 	"assets": {
 		"directory": "../dist",
+		"binding": "ASSETS",
+		// Only /dl/* runs the Worker first; every other request is served from the assets as before (with its _headers).
+		"run_worker_first": ["/dl/*"],
 		"not_found_handling": "404-page",
 		"html_handling": "auto-trailing-slash"
 	}

@@ -119,6 +119,9 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: write
+    env:
+      # Secrets cannot be tested in a step's `if:` directly; this flag is "true" only when the repository has the Cloudflare token.
+      MIRROR_ENABLED: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && 'true' || 'false' }}
     steps:
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
@@ -143,3 +146,40 @@ jobs:
             --verify-tag \
             --title "Smart Route ${TAG#v}" \
             --generate-notes
+
+      - name: Mirror to Cloudflare R2 (skipped without CLOUDFLARE_API_TOKEN)
+        if: env.MIRROR_ENABLED != 'true'
+        shell: bash
+        run: |
+          echo "::notice title=R2 mirror skipped::No CLOUDFLARE_API_TOKEN secret, so run scripts/mirror-release.sh ${GITHUB_REF_NAME} by hand to serve this release from smartroute.yolea.ai/dl/."
+
+      - name: Checkout (for the mirror script and the pinned wrangler)
+        if: env.MIRROR_ENABLED == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          path: repo # a separate folder: checkout would otherwise wipe dist-all
+
+      - name: Install pnpm (mirror)
+        if: env.MIRROR_ENABLED == 'true'
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+        with:
+          package_json_file: repo/package.json
+
+      - name: Install the pinned wrangler (mirror)
+        if: env.MIRROR_ENABLED == 'true'
+        shell: bash
+        run: pnpm install --dir repo/site/deploy --frozen-lockfile --ignore-workspace
+
+      - name: Mirror to Cloudflare R2
+        if: env.MIRROR_ENABLED == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          TAG: ${{ github.ref_name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # The files just built are already in dist-all: no second download. The script still verifies every SHA-256 and uploads latest.json last.
+          bash repo/scripts/mirror-release.sh --from-dir "$GITHUB_WORKSPACE/dist-all" "$TAG"

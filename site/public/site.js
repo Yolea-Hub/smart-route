@@ -1,17 +1,20 @@
-/* Smart Route site: OS detection, download list from the latest GitHub release, copy buttons, the route sequence.
-   Nothing is stored, no cookie, no third-party script. The only requests are to GitHub: the public API
-   (releases/latest of Yolea-Hub/smart-route, no token) and, when the browser allows it, the SHA256SUMS file of that release.
-   Without this file the page is complete: the download area says "Bientôt disponible / Coming soon" and the constellation is static.
+/* Smart Route site: OS detection, download list, copy buttons, the route sequence.
+   Nothing is stored, no cookie, no third-party script. The download list comes first from this very site: /dl/latest.json,
+   written by scripts/mirror-release.sh next to the installers it copies into R2 (served by the Worker under /dl/, same origin).
+   Only when that file is missing or invalid does the page fall back to GitHub: the public API (releases/latest of
+   Yolea-Hub/smart-route, no token) and, when the browser allows it, the SHA256SUMS file of that release.
+   Without either the page is complete: the download area says "Bientôt disponible / Coming soon" and the constellation is static.
 
    Files are recognised by the names electron-builder writes (artifactName "Smart-Route-<version>-<os>-<arch>.<ext>"):
    Smart-Route-0.1.0-linux-x86_64.AppImage, -linux-amd64.deb, -win-x64.exe, -mac-arm64.dmg, -mac-x64.dmg.
-   Only links under https://github.com/Yolea-Hub/smart-route/releases/download/ are accepted. */
+   Accepted links: /dl/v<version>/<name> of this site (manifest) or https://github.com/Yolea-Hub/smart-route/releases/download/ (fallback). */
 (function () {
   'use strict';
   var API_LATEST = 'https://api.github.com/repos/Yolea-Hub/smart-route/releases/latest';
   var RELEASES_PAGE = 'https://github.com/Yolea-Hub/smart-route/releases';
   var DL_PREFIX = 'https://github.com/Yolea-Hub/smart-route/releases/download/';
   var SUMS_NAME = 'SHA256SUMS';
+  var MANIFEST_URL = '/dl/latest.json';
   var doc = document;
   var lang = (doc.documentElement.lang || 'fr').slice(0, 2) === 'en' ? 'en' : 'fr';
   var TEXT = {
@@ -109,6 +112,28 @@
     return { version: version, date: date, files: files, sums: sums };
   }
 
+  // /dl/latest.json -> { version, date, files, sums }, or null. Stricter than the GitHub path: every field is checked, and the link of a
+  // file must be exactly /dl/v<version>/<name> on this site (the SHA-256 travels in the manifest, so no SHA256SUMS request is needed).
+  function validManifest(d) {
+    if (!d || typeof d !== 'object' || typeof d.version !== 'string' || !/^\d+\.\d+\.\d+$/.test(d.version) || !Array.isArray(d.files)) return null;
+    var files = [];
+    for (var i = 0; i < d.files.length; i += 1) {
+      var a = d.files[i];
+      if (!a || typeof a !== 'object' || typeof a.name !== 'string') return null;
+      var m = NAME_RE.exec(a.name);
+      if (!m || m[1] !== d.version) return null;
+      var os = OS_OF[m[2]];
+      if (OS_KINDS[os].indexOf(m[4]) < 0) return null;
+      if (typeof a.size !== 'number' || !isFinite(a.size) || a.size <= 0 || a.size > 4e9) return null;
+      if (a.url !== '/dl/v' + d.version + '/' + a.name) return null;
+      if (typeof a.sha256 !== 'string' || !/^[0-9a-fA-F]{64}$/.test(a.sha256)) return null;
+      files.push({ os: os, arch: m[3] === 'arm64' ? 'arm64' : 'x64', kind: m[4], name: a.name, url: a.url, size: a.size, version: d.version, sha256: a.sha256.toLowerCase() });
+    }
+    if (!files.length) return null;
+    var date = typeof d.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d.date) ? d.date : '';
+    return { version: d.version, date: date, files: files, sums: '' };
+  }
+
   // "<64 hex>  <name>" lines (sha256sum output) -> { name: hex }
   function parseSums(text) {
     var out = {};
@@ -147,6 +172,15 @@
 
   var shaCount = 0;
   var fileCount = 0;
+  function showHash(row, hex) {
+    while (row.firstChild) row.removeChild(row.firstChild);
+    var id = 'sr-sha-' + (shaCount += 1);
+    row.appendChild(el('span', 'sr-sha-label', TEXT.sha));
+    var code = el('code', '', hex);
+    code.id = id;
+    row.appendChild(code);
+    row.appendChild(copyButton(id));
+  }
   function fileItem(f, sums) {
     var li = el('li', 'sr-file');
     var nameNode = el('span', 'sr-file-name', labelOf(f));
@@ -161,7 +195,9 @@
     li.appendChild(a);
     var row = el('div', 'sr-sha');
     row.setAttribute('data-sha-row', f.name);
-    if (sums) {
+    if (f.sha256) {
+      showHash(row, f.sha256);
+    } else if (sums) {
       var link = el('a', '', TEXT.sums);
       link.href = sums;
       link.rel = 'noopener';
@@ -183,13 +219,7 @@
           var rows = doc.querySelectorAll('[data-sha-row]');
           for (var i = 0; i < rows.length; i += 1) {
             if (rows[i].getAttribute('data-sha-row') !== f.name) continue;
-            while (rows[i].firstChild) rows[i].removeChild(rows[i].firstChild);
-            var id = 'sr-sha-' + (shaCount += 1);
-            rows[i].appendChild(el('span', 'sr-sha-label', TEXT.sha));
-            var code = el('code', '', hex);
-            code.id = id;
-            rows[i].appendChild(code);
-            rows[i].appendChild(copyButton(id));
+            showHash(rows[i], hex);
           }
         });
       })
@@ -262,6 +292,25 @@
     var os = detectOs();
     var root = doc.querySelector('[data-dl]');
     if (!root || !window.fetch) return;
+    var ctl0 = window.AbortController ? new AbortController() : null;
+    var timer0 = setTimeout(function () { if (ctl0) ctl0.abort(); }, 5000);
+    fetch(MANIFEST_URL, { credentials: 'omit', referrerPolicy: 'no-referrer', signal: ctl0 ? ctl0.signal : undefined })
+      .then(function (r) { if (!r.ok) throw new Error('http'); return r.json(); })
+      .then(function (d) {
+        clearTimeout(timer0);
+        var data = validManifest(d);
+        if (!data) throw new Error('shape');
+        return data;
+      })
+      .then(function (data) {
+        renderDownloads(data, os);
+      }, function () {
+        clearTimeout(timer0);
+        loadFromGithub(root, os); // no mirror yet, or it is unreachable or invalid: GitHub, as before
+      });
+  }
+
+  function loadFromGithub(root, os) {
     var ctl = window.AbortController ? new AbortController() : null;
     var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 8000);
     fetch(API_LATEST, { mode: 'cors', credentials: 'omit', referrerPolicy: 'no-referrer', headers: { Accept: 'application/vnd.github+json' }, signal: ctl ? ctl.signal : undefined })
@@ -353,7 +402,7 @@
     io.observe(rc);
   }
 
-  if (window.__SR_TEST__) window.__SR_TEST__.hooks = { validData: validData, parseSums: parseSums, safeUrl: safeUrl };
+  if (window.__SR_TEST__) window.__SR_TEST__.hooks = { validData: validData, validManifest: validManifest, parseSums: parseSums, safeUrl: safeUrl };
   doc.addEventListener('click', onCopyClick);
   loadDownloads();
   setupMenu();

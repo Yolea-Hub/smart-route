@@ -131,3 +131,67 @@ test('rejects assets outside the project release URL, odd names, drafts, prerele
   assert.equal(hooks.validData({ ...release(), prerelease: true }), null)
   assert.equal(hooks.validData(null), null)
 })
+
+// ---- /dl/latest.json (mirror on this site) first, GitHub as the fallback
+const MAN = '/dl/latest.json'
+const HEX = (c) => c.repeat(64)
+const manifest = () => ({
+  version: '0.2.1', date: '2026-11-04',
+  files: [
+    ['linux', 'x64', 'AppImage', 'Smart-Route-0.2.1-linux-x86_64.AppImage', 'a'], ['linux', 'x64', 'deb', 'Smart-Route-0.2.1-linux-amd64.deb', 'b'],
+    ['windows', 'x64', 'exe', 'Smart-Route-0.2.1-win-x64.exe', 'c'], ['mac', 'arm64', 'dmg', 'Smart-Route-0.2.1-mac-arm64.dmg', 'd'], ['mac', 'x64', 'dmg', 'Smart-Route-0.2.1-mac-x64.dmg', 'e']
+  ].map(([os, arch, kind, name, c]) => ({ os, arch, kind, name, url: `/dl/v0.2.1/${name}`, size: 1048576 * 100, sha256: HEX(c) }))
+})
+
+test('R2 manifest used: same-origin links, sizes and SHA-256 shown inline, GitHub never asked', async () => {
+  const r = run({ [MAN]: { status: 200, json: manifest() } })
+  await tick()
+  assert.deepEqual(r.calls, [MAN])
+  assert.equal(r.cards.linux.list.children.length, 2)
+  assert.equal(r.cards.mac.list.children.length, 2)
+  assert.match(r.primary.attrs.download, /linux-x86_64\.AppImage$/)
+  assert.equal(r.primary.href, '/dl/v0.2.1/Smart-Route-0.2.1-linux-x86_64.AppImage')
+  assert.match(r.primary.textContent, /Linux \(100 MB\)/)
+  assert.match(r.root.q['[data-dl-meta]'].textContent, /^Version 0\.2\.1, /)
+  assert.ok(r.cards.windows.list.text().includes(HEX('c')))
+  assert.ok(r.cards.linux.list.text().includes(HEX('b')))
+  const links = r.cards.linux.list.all().filter((n) => n.tag === 'a').map((n) => n.href)
+  assert.ok(links.every((h) => h.startsWith('/dl/v0.2.1/')), links.join())
+})
+
+test('manifest missing (404 or network): falls back to the GitHub API', async () => {
+  for (const responses of [{ [MAN]: { status: 404 } }, {}]) {
+    const r = run({ ...responses, [API]: { status: 200, json: release() }, [P + 'SHA256SUMS']: { status: 500 } })
+    await tick()
+    assert.deepEqual(r.calls.slice(0, 2), [MAN, API])
+    assert.equal(r.cards.linux.list.children.length, 2)
+    assert.ok(r.cards.linux.list.all().some((n) => n.tag === 'a' && n.href.startsWith(P)))
+  }
+})
+
+test('manifest invalid: falls back to GitHub (and coming soon when GitHub has nothing)', async () => {
+  const bad = manifest(); bad.files[0].url = 'https://evil.example/x'
+  const r = run({ [MAN]: { status: 200, json: bad }, [API]: { status: 404 } })
+  await tick()
+  assert.ok(r.calls.includes(API))
+  assert.match(r.status.textContent, /^Coming soon/)
+})
+
+test('manifest strictness: odd URLs, names, versions, hashes, sizes, shapes', () => {
+  const { hooks } = run({})
+  assert.ok(hooks.validManifest(manifest()))
+  const mut = (f) => { const m = manifest(); f(m); return hooks.validManifest(m) }
+  assert.equal(mut((m) => { m.files[0].url = '/dl/v0.2.1/x.exe' }), null)
+  assert.equal(mut((m) => { m.files[0].url += '?a=1' }), null)
+  assert.equal(mut((m) => { m.files[0].url = 'https://smartroute.yolea.ai' + m.files[0].url }), null)
+  assert.equal(mut((m) => { m.files[0].url = m.files[0].url.replace('/dl/', '//evil.example/dl/') }), null)
+  assert.equal(mut((m) => { m.version = '0.2.2' }), null, 'file versions must equal the manifest version')
+  assert.equal(mut((m) => { m.files[0].sha256 = 'zz' }), null)
+  assert.equal(mut((m) => { m.files[0].size = 0 }), null)
+  assert.equal(mut((m) => { m.files[0].name = 'Smart-Route-0.2.1-linux-amd64.zip' }), null)
+  assert.equal(mut((m) => { m.files = [] }), null)
+  assert.equal(mut((m) => { m.version = '0.2' }), null)
+  assert.equal(hooks.validManifest(null), null)
+  assert.equal(hooks.validManifest([]), null)
+  assert.equal(mut((m) => { m.date = 'tomorrow' }).date, '')
+})

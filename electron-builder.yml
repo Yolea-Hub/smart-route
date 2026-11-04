@@ -43,4 +43,6 @@ electronFuses:
   onlyLoadAppFromAsar: true
   enableEmbeddedAsarIntegrityValidation: true
   enableCookieEncryption: true
-  grantFileProtocolExtraPrivileges: false
+  # Must stay true (Electron default): the renderer is loaded with win.loadFile(); with false the packaged window is blank
+  # (ERR_FILE_NOT_FOUND). The release smoke test fails if this regresses. Follow-up: a custom app:// protocol would allow false.
+  grantFileProtocolExtraPrivileges: true

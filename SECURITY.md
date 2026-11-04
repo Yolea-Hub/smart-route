@@ -23,6 +23,7 @@ L'application peut servir une version web d'elle-même, désactivée à chaque d
 - Les exécutions lancées depuis le navigateur sont en lecture seule. Ce navigateur peut utiliser, en lecture seule, les dossiers déjà choisis dans l'application. Le navigateur ne peut ni choisir un dossier, ni connecter un compte, ni vider l'historique, ni changer un réglage autre que la langue.
 - Le trafic local n'est pas chiffré : n'activez pas l'accès sur un ordinateur partagé avec des personnes qui n'ont pas votre confiance.
 - Lecture du web par Antigravity : une instruction cachée dans un texte ou un fichier pourrait pousser l'outil à lire vos fichiers puis à les envoyer à une adresse web. Pour l'éviter, Smart Route n'autorise la lecture d'adresses web (`read_url`) que lorsque l'étape tourne **sans** dossier de votre part (dossier de travail temporaire et vide). Quand vous choisissez un dossier, les étapes en lecture seule d'Antigravity n'ont pas cette permission : elles répondent avec leurs connaissances, et le brief leur dit que la lecture du web est indisponible, par confidentialité.
+- Durcissement du programme installé : le fusible Electron `grantFileProtocolExtraPrivileges` reste actif (valeur par défaut), car l'interface est chargée depuis un fichier local. Suite prévue : un protocole interne `app://` permettrait de le désactiver.
 - Hors périmètre : un attaquant qui a déjà le contrôle de votre session utilisateur, ou les failles des outils tiers lancés (à signaler à leurs éditeurs).
 
 ### Vérifier un téléchargement
@@ -52,6 +53,7 @@ The app can serve a web version of itself, switched off at every start.
 - Runs started from the browser are read-only. This browser can use, read-only, the folders already chosen in the app. The browser cannot pick a folder, connect an account, clear the history, or change any setting other than the language.
 - Local traffic is not encrypted: do not turn access on for a computer shared with people you do not trust.
 - Web reading by Antigravity: an instruction hidden in a text or a file could push the tool to read your files and then send them to a web address. To prevent this, Smart Route allows reading web addresses (`read_url`) only when the step runs **without** a folder from you (the empty temporary work folder). When you choose a folder, Antigravity's read-only steps do not have that permission: they answer from their knowledge, and the brief tells them web reading is unavailable, for privacy.
+- Packaged-app hardening: the Electron fuse `grantFileProtocolExtraPrivileges` stays on (the default), because the interface is loaded from a local file. Planned follow-up: a custom `app://` protocol would allow turning it off.
 - Out of scope: an attacker who already controls your user session, or flaws in the third-party tools Smart Route launches (report those to their vendors).
 
 ### Verify a download

@@ -1,5 +1,7 @@
 import { app, BrowserWindow, dialog, ipcMain, session, shell, type IpcMainInvokeEvent } from 'electron'
+import { mkdtempSync } from 'node:fs'
 import { writeFile } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { isSafeExternalUrl } from '../core/webPolicy'
@@ -12,6 +14,8 @@ import { shutdownRuns, type ShutdownDeps } from './shutdown'
 import { Store } from './store'
 import { WebPanels } from './web'
 
+const SMOKE = process.env['SMART_ROUTE_SMOKE'] === '1'
+const SMOKE_TIMEOUT_MS = 60_000
 const DEV_URL = process.env['ELECTRON_RENDERER_URL']
 const RENDERER_FILE = join(__dirname, '../renderer/index.html')
 const APP_ORIGIN_PREFIX = DEV_URL ?? pathToFileURL(RENDERER_FILE).href
@@ -48,7 +52,9 @@ function createWindow(): BrowserWindow {
       allowRunningInsecureContent: false
     }
   })
-  win.once('ready-to-show', () => win.show())
+  win.once('ready-to-show', () => {
+    if (!SMOKE) win.show()
+  })
   win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }))
   win.webContents.on('will-navigate', (event, url) => {
     if (!url.startsWith(APP_ORIGIN_PREFIX)) event.preventDefault()
@@ -58,11 +64,45 @@ function createWindow(): BrowserWindow {
   return win
 }
 
-if (process.env['SMART_ROUTE_SMOKE'] === '1') {
-  // Release smoke test: print the version and leave before any window, IPC or listener exists.
-  console.log(`smart-route ${app.getVersion()}`)
-  app.quit()
-} else if (!app.requestSingleInstanceLock()) {
+// Release smoke test: loads the renderer exactly like production in a hidden window and checks it rendered.
+// A blank window (renderer file not loadable) must fail it. No single-instance lock, so it runs next to a normal instance.
+function runSmoke(win: BrowserWindow): void {
+  const fail = (reason: string): void => {
+    console.error(`smart-route ${app.getVersion()} renderer-fail: ${reason}`)
+    app.exit(1)
+  }
+  setTimeout(() => fail(`timeout after ${SMOKE_TIMEOUT_MS} ms`), SMOKE_TIMEOUT_MS).unref()
+  win.webContents.on('did-fail-load', (_e, code, description, url) => fail(`load error ${code} ${description} ${url}`))
+  win.webContents.on('did-finish-load', () => {
+    const probe = `new Promise((resolve) => {
+      const started = Date.now()
+      const check = () => {
+        const root = document.querySelector('#root')
+        const text = (document.body.innerText || '').trim()
+        if (root && root.childElementCount > 0 && text.length > 0) resolve('ok')
+        else if (Date.now() - started > 20000) resolve('renderer root empty')
+        else setTimeout(check, 100)
+      }
+      check()
+    })`
+    win.webContents
+      .executeJavaScript(probe)
+      .then((r: unknown) => {
+        if (r === 'ok') {
+          console.log(`smart-route ${app.getVersion()} renderer-ok`)
+          app.exit(0)
+        } else fail(String(r))
+      })
+      .catch((err: unknown) => fail(err instanceof Error ? err.message : String(err)))
+  })
+}
+
+if (SMOKE) {
+  // Throwaway profile: the smoke test must never touch the user's data.
+  app.setPath('userData', mkdtempSync(join(tmpdir(), 'smart-route-smoke-')))
+}
+
+if (!SMOKE && !app.requestSingleInstanceLock()) {
   app.quit()
 } else {
   app.on('second-instance', () => {
@@ -87,6 +127,7 @@ if (process.env['SMART_ROUTE_SMOKE'] === '1') {
 
     mainWindow = createWindow()
     const win = mainWindow
+    if (SMOKE) runSmoke(win)
     panels = new WebPanels(
       win,
       (url) => void shell.openExternal(url),

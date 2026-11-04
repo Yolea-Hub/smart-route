@@ -67,7 +67,7 @@ jobs:
           chmod +x release/*.AppImage
           out="$(SMART_ROUTE_SMOKE=1 APPIMAGE_EXTRACT_AND_RUN=1 timeout 120 xvfb-run -a release/Smart-Route-"${version}"-linux-x86_64.AppImage --no-sandbox)"
           echo "$out"
-          echo "$out" | grep -F "smart-route $version"
+          echo "$out" | grep -F "smart-route $version renderer-ok"
 
       - name: Smoke (Windows unpacked app)
         if: matrix.name == 'windows'
@@ -80,7 +80,7 @@ jobs:
           $p = Start-Process -FilePath $exe -Wait -PassThru -RedirectStandardOutput $out
           Get-Content $out
           if ($p.ExitCode -ne 0) { throw "exit code $($p.ExitCode)" }
-          if (-not (Select-String -Path $out -SimpleMatch -Quiet "smart-route $version")) { throw 'version line missing' }
+          if (-not (Select-String -Path $out -SimpleMatch -Quiet "smart-route $version renderer-ok")) { throw 'renderer-ok line missing' }
 
       - name: Smoke (macOS app)
         if: matrix.name == 'macos'
@@ -102,7 +102,7 @@ jobs:
           echo "$out"
           echo "exit code: $status"
           [ "$status" -eq 0 ]
-          echo "$out" | grep -F "smart-route $version"
+          echo "$out" | grep -F "smart-route $version renderer-ok"
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:

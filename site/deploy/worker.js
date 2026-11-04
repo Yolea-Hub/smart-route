@@ -100,7 +100,8 @@ async function serveDl(request, env, target) {
 		const validator = request.headers.has('If-None-Match') || request.headers.has('If-Modified-Since')
 		return new Response(null, { status: validator ? 304 : 412, headers: h })
 	}
-	const abs = absoluteRange(object.range, object.size)
+	// R2 reports a range on every object, even for a plain GET: only a request that asked for one gets a 206.
+	const abs = request.headers.has('Range') ? absoluteRange(object.range, object.size) : null
 	if (abs && abs.length <= 0) return plain(416, 'Range not satisfiable', { 'Content-Range': `bytes */${object.size}` })
 	if (abs) {
 		h.set('Content-Range', `bytes ${abs.first}-${abs.last}/${object.size}`)

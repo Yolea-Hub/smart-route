@@ -1,0 +1,47 @@
+name: Bogue / Bug
+description: Quelque chose ne marche pas comme prévu. / Something does not work as expected.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci. Écrivez en français ou en anglais. / Thank you. Write in French or English.
+        Faille de sécurité ? Ne la publiez pas : voir SECURITY.md. / Security flaw? Do not post it: see SECURITY.md.
+  - type: textarea
+    id: what
+    attributes:
+      label: Ce qui se passe / What happens
+      description: Et ce que vous attendiez. / And what you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pour reproduire / Steps to reproduce
+      placeholder: "1. ...\n2. ...\n3. ..."
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version de Smart Route / Smart Route version
+      description: Réglages, À propos. / Settings, About.
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Système / Operating system
+      options:
+        - Linux
+        - Windows
+        - macOS (Apple Silicon)
+        - macOS (Intel)
+        - Navigateur (version web) / Browser (web version)
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: Autre / Anything else
+      description: Capture d'écran, message d'erreur. Ne collez ni clé ni contenu privé. / Screenshot, error message. Do not paste keys or private content.

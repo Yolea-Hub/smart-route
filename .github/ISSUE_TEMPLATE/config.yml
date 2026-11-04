@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Sécurité / Security
+    url: https://github.com/Yolea-Hub/smart-route/blob/main/SECURITY.md
+    about: Ne publiez pas de faille ici. / Do not post a vulnerability here.

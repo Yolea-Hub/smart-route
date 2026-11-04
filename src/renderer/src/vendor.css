@@ -1,0 +1,11 @@
+/* The three vendor colours (owner deviation 2, 3 Nov 2026, see YOLEA.md). They are used ONLY for the ring and glow of a node
+   while its tool works, for the particles that run to it, and for the border of the name chip shown when a logo file is missing.
+   They never touch a logo, and no other part of the interface uses them. */
+:root {
+  --vendor-anthropic: #D97757;
+  --vendor-openai: #10A37F;
+  --vendor-google: #4285F4;
+}
+.v-anthropic { --v: var(--vendor-anthropic); }
+.v-openai { --v: var(--vendor-openai); }
+.v-google { --v: var(--vendor-google); }

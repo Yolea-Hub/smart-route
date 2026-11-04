@@ -1,0 +1,92 @@
+Smart Route — Copyright 2026 Yolea, Abidjan
+
+Smart Route est publié sous licence Apache, version 2.0 (voir le fichier LICENSE).
+
+Ce qui n'est pas couvert par la licence Apache 2.0
+--------------------------------------------------
+La licence Apache 2.0 ne donne aucun droit sur les noms commerciaux, marques,
+marques de service ou logos (article 6 de la licence). En particulier, les
+éléments suivants ne sont PAS couverts par la licence et ne font pas partie de
+ce que vous pouvez copier, modifier ou redistribuer :
+
+  - Sogoma, le système de design de Yolea (jetons, feuilles de style, script de
+    thème), ses logos, ses illustrations et ses photos, y compris la copie
+    partielle dans le dossier kit/. Ils restent la propriété de Yolea.
+
+  - les noms « Yolea » et « Smart Route », ainsi que les logos et marques
+    Yolea et Smart Route (les fichiers de assets/ et kit/ qui les portent).
+    Ils restent la propriété de Yolea. Vous pouvez dupliquer et redistribuer
+    le code ; si vous le faites, donnez à votre version un autre nom et
+    d'autres logos.
+
+  - les noms et logos de tiers montrés dans l'application et sur le site, qui
+    appartiennent à leurs propriétaires et sont utilisés selon leurs
+    conditions, uniquement pour dire que Smart Route fonctionne avec leurs
+    produits :
+      Claude et Claude Code, © Anthropic, PBC ;
+      ChatGPT, Codex et le logo OpenAI, © OpenAI ;
+      Gemini et Antigravity, © Google LLC.
+    Smart Route est un produit indépendant de Yolea. Il n'est ni affilié à
+    ces sociétés, ni approuvé, ni parrainé par elles.
+
+Polices
+-------
+Les polices fournies avec Smart Route sont sous SIL Open Font License,
+version 1.1 :
+  - Inter ;
+  - Newsreader ;
+  - JetBrains Mono.
+Les textes des licences sont dans kit/fonts/LICENCES/ (OFL-Inter.txt,
+OFL-Newsreader.txt, OFL-JetBrainsMono.txt) ; l'origine des fichiers est dans
+kit/fonts/SOURCES.md.
+
+Logiciels tiers
+---------------
+Les dépendances de Smart Route gardent leurs propres licences. Elles sont
+listées sur le site, page « Licences » (https://smartroute.yolea.ai/licences/).
+
+---------------------------------------------------------------------------
+
+Smart Route — Copyright 2026 Yolea, Abidjan
+
+Smart Route is licensed under the Apache License, Version 2.0 (see the LICENSE file).
+
+What the Apache License 2.0 does not cover
+------------------------------------------
+The Apache License 2.0 does not grant any right to use trade names, trademarks,
+service marks or logos (section 6 of the licence). In particular, the following
+are NOT covered by the licence and are not part of what you may copy, modify or
+redistribute:
+
+  - Sogoma, Yolea's design system (tokens, style sheets, theme script), its
+    logos, its illustrations and its photos, including the partial copy in the
+    kit/ folder. They remain the property of Yolea.
+
+  - the names "Yolea" and "Smart Route", and the Yolea and Smart Route logos
+    and marks (the files under assets/ and kit/ that carry them). They remain
+    the property of Yolea. You may fork and redistribute the code; if you do,
+    use another name and other logos for your version.
+
+  - the names and logos of third parties shown in the application and on the
+    site, which belong to their owners and are used under their owners' terms
+    of use, only to say that Smart Route works with their products:
+      Claude and Claude Code, © Anthropic, PBC;
+      ChatGPT, Codex and the OpenAI logo, © OpenAI;
+      Gemini and Antigravity, © Google LLC.
+    Smart Route is an independent product of Yolea. It is not affiliated with,
+    endorsed by or sponsored by these companies.
+
+Fonts
+-----
+The fonts shipped with Smart Route are under the SIL Open Font License,
+Version 1.1:
+  - Inter;
+  - Newsreader;
+  - JetBrains Mono.
+The licence texts are in kit/fonts/LICENCES/ (OFL-Inter.txt, OFL-Newsreader.txt,
+OFL-JetBrainsMono.txt); the origin of the files is in kit/fonts/SOURCES.md.
+
+Third-party software
+--------------------
+Smart Route's dependencies keep their own licences. They are listed on the
+site, page "Licences" (https://smartroute.yolea.ai/licences/).

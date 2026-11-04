@@ -1,0 +1,10 @@
+# Extends the default rules. The only allowance is the RFC 6455 sample nonce used as a WebSocket handshake fixture.
+title = "Smart Route gitleaks"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "RFC 6455 sample Sec-WebSocket-Key in the bridge test"
+paths = ['''tests/main/bridge\.test\.ts''']
+regexes = ['''dGhlIHNhbXBsZSBub25jZQ==''']

@@ -1,0 +1,148 @@
+/* Sogoma components, v4.0.0. Needs tokens.css, base.css and icons.css (the icon classes live in icons.css).
+   Rules: tokens only (no raw colour); durations 120 / 200 / 320 / 800 ms through the --duration-* variables and the
+   --ease-held curve only; nothing loops; no shadow except --shadow-sheet on the Sheet; one primary action per screen
+   (a button with the data-primary attribute). Every state is carried by words and shapes, never by colour alone. */
+
+/* ---- Sky and Line: see base.css (.sg-sky, .sg-sky__name, .sg-sky__sun, .sg-line) ---------------------------------- */
+
+/* ---- Greeting -------------------------------------------------------------------------------------------------- */
+.sg-greeting { font-family: var(--type-voice-lg-family); font-weight: var(--type-voice-lg-weight); font-size: max(var(--floor-act), var(--type-voice-lg-size)); line-height: max(var(--type-voice-lg-line), 1.15em); color: var(--ink); text-wrap: balance; }
+/* A name the Voice cannot draw (kit/fonts/KNOWN_GAPS.json; rule in greeting.spec): owner decision 10, the name alone in Inter 500 inside the Newsreader sentence. */
+.sg-greeting__name { font-family: var(--font-hand); font-weight: var(--type-label-weight); }
+.sg-greeting__line { display: block; font-family: var(--type-voice-sm-family); font-weight: var(--type-voice-sm-weight); font-size: max(var(--floor-act), var(--type-voice-sm-size)); color: var(--ink-muted); margin-block-start: var(--space-8); line-height: max(var(--type-voice-sm-line), 1.35em); text-wrap: pretty; }
+
+/* ---- Palaver: one claim, one source line, three pill chips, the Rafiq label ----------------------------------------- */
+.sg-palaver { display: grid; gap: var(--space-12); padding: var(--space-16); background: var(--mist); color: var(--ink); border-radius: var(--radius-md); }
+.sg-palaver__label { font-family: var(--type-label-family); font-weight: var(--type-label-weight); font-size: max(var(--floor-label), var(--type-label-size)); line-height: 1.3; color: var(--ink-muted); }
+.sg-palaver__claim { font-family: var(--type-voice-sm-family); font-weight: var(--type-voice-sm-weight); font-size: max(var(--floor-act), var(--type-voice-sm-size)); line-height: max(var(--type-voice-sm-line), 1.35em); }
+.sg-palaver__source { font-family: var(--type-small-family); font-size: max(var(--floor-label), var(--type-small-size)); line-height: max(var(--type-small-line), 1.4em); color: var(--ink-muted); }
+.sg-palaver__actions { display: flex; flex-wrap: wrap; gap: var(--space-8); }
+
+/* ---- ReadBack: the sentence the person confirms, then the two choices --------------------------------------------- */
+.sg-readback { display: grid; gap: var(--space-16); padding: var(--space-24) var(--space-16); border: 2px solid var(--border); border-radius: var(--radius-md); background: var(--surface); }
+.sg-readback__label { font-family: var(--type-label-family); font-weight: var(--type-label-weight); font-size: max(var(--floor-label), var(--type-label-size)); color: var(--ink-muted); }
+.sg-readback__sentence { font-family: var(--type-voice-md-family); font-weight: var(--type-voice-md-weight); font-size: max(var(--floor-act), var(--type-voice-md-size)); line-height: max(var(--type-voice-md-line), 1.25em); }
+.sg-readback__actions { display: flex; flex-wrap: wrap; gap: var(--space-12); align-items: center; }
+
+/* ---- Receipt: what was done, said once -------------------------------------------------------------------------- */
+.sg-receipt { display: grid; gap: var(--space-8); padding: var(--space-16); border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface-raised); }
+.sg-receipt__title { font-family: var(--type-heading-family); font-weight: var(--type-heading-weight); font-size: max(var(--floor-act), var(--type-heading-size)); }
+.sg-receipt__row { display: flex; justify-content: space-between; gap: var(--space-16); font-size: max(var(--floor-act), var(--type-body-size)); }
+.sg-receipt__row dt { min-width: 0; overflow-wrap: break-word; }
+.sg-receipt__row dd { font-variant-numeric: tabular-nums; margin: 0; min-width: 0; text-align: end; overflow-wrap: break-word; } /* digits stay whole by U+202F and U+00A0, not by nowrap: a sentence wraps at 200 % */
+.sg-receipt__undo { font-size: max(var(--floor-label), var(--type-small-size)); color: var(--ink-muted); }
+
+/* ---- Edge: the only progress indicator (a 2 px line that fills once, never loops, no percentage animation) ---------- */
+.sg-edge { height: 2px; background: var(--line); }
+.sg-edge__fill { height: 100%; width: calc(var(--edge, 0) * 1%); background: var(--oasis); transition: width var(--duration-state) var(--ease-held); }
+
+/* ---- Button: 44 px minimum, 48 px primary, one primary per screen ------------------------------------------------- */
+.sg-button { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); min-height: var(--size-touch); padding: 0 var(--space-24); border: 2px solid var(--border); border-radius: var(--radius-pill); background: var(--surface); color: var(--ink); font-family: var(--type-label-family); font-weight: var(--type-label-weight); font-size: max(var(--floor-act), var(--type-body-size)); line-height: 1.2; text-decoration: none; transition: background-color var(--duration-micro) var(--ease-held); }
+.sg-button:hover { background: var(--surface-quiet); }
+.sg-button[data-primary] { min-height: var(--size-primary); background: var(--oasis); color: var(--on-oasis); border-color: var(--oasis); }
+.sg-button[data-primary]:hover { background: var(--oasis-deep); border-color: var(--oasis-deep); }
+.sg-button--quiet { border-color: transparent; background: transparent; text-decoration: underline; text-underline-offset: 0.2em; }
+.sg-button[disabled], .sg-button[aria-disabled="true"] { border-style: dashed; color: var(--ink-muted); background: var(--locked-soft); cursor: not-allowed; }
+
+/* ---- Link ------------------------------------------------------------------------------------------------------ */
+.sg-link { color: var(--oasis); text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+.sg-link:hover { text-decoration-thickness: 2px; }
+
+/* ---- Field, PhoneField, OtpField: label above, 44 px control, helper, validation sentence ------------------------------ */
+.sg-field { display: grid; gap: var(--space-8); }
+.sg-field__label { font-family: var(--type-label-family); font-weight: var(--type-label-weight); font-size: max(var(--floor-label), var(--type-label-size)); }
+.sg-field__input { min-height: var(--size-touch); padding: 0 var(--space-12); border: 2px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--ink); font-size: max(var(--floor-act), var(--type-body-size)); width: 100%; }
+.sg-field__helper { font-size: max(var(--floor-label), var(--type-small-size)); line-height: max(var(--type-small-line), 1.4em); color: var(--ink-muted); }
+/* S16: the repair sentence is in ink; the error colour lives on the failure pictogram only. aria-invalid and the sentence carry the meaning. */
+.sg-field__error { font-size: max(var(--floor-label), var(--type-small-size)); color: var(--ink); display: none; align-items: flex-start; gap: var(--space-8); }
+.sg-field__error .sg-pict { display: inline-block; flex: none; width: 10px; height: 10px; margin-block-start: 0.45em; }
+.sg-field__error .sg-pict[data-pict="failure"] { border: 2px solid currentColor; transform: rotate(45deg); margin-inline: 2px; color: var(--error); }
+.sg-field__input[aria-invalid="true"] { border-color: var(--ink); border-width: 2px; }
+.sg-field__input[aria-invalid="true"] ~ .sg-field__error { display: flex; }
+.sg-phonefield { display: grid; grid-template-columns: auto 1fr; gap: var(--space-8); align-items: stretch; }
+.sg-phonefield__prefix { display: inline-flex; align-items: center; min-height: var(--size-touch); padding: 0 var(--space-12); border: 2px solid var(--border); border-radius: var(--radius-sm); background: var(--surface-quiet); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sg-otp { display: flex; gap: var(--space-8); }
+.sg-otp__cell { width: var(--size-touch); min-height: var(--size-primary); text-align: center; border: 2px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); font-variant-numeric: tabular-nums; font-size: max(var(--floor-act), var(--type-amount-sm-size)); }
+
+/* ---- Checkbox ------------------------------------------------------------------------------------------------- */
+.sg-check { display: flex; gap: var(--space-12); align-items: flex-start; min-height: var(--size-touch); }
+.sg-check input { width: 24px; height: 24px; margin: calc((var(--size-touch) - 24px) / 2) 0; accent-color: var(--oasis); flex: none; }
+.sg-check label { padding-block: var(--space-12); }
+
+/* ---- Chip: a pill, 44 px high, the Palaver's three answers ------------------------------------------------------------ */
+.sg-chip { display: inline-flex; align-items: center; min-height: var(--size-touch); padding: 0 var(--space-16); border: 2px solid var(--border); border-radius: var(--radius-pill); background: var(--surface); color: var(--ink); font-family: var(--type-label-family); font-weight: var(--type-label-weight); font-size: max(var(--floor-label), var(--type-label-size)); }
+.sg-chip[aria-pressed="true"], .sg-chip[aria-checked="true"] { border-color: var(--oasis); border-width: 3px; font-weight: 600; }
+
+/* ---- Tabs: four at most; the selected tab is bold and underlined, not only coloured ------------------------------------- */
+.sg-tabs { display: flex; gap: var(--space-8); border-block-end: 1px solid var(--line); }
+.sg-tab { min-height: var(--size-touch); padding: 0 var(--space-16); border: 0; border-block-end: 2px solid transparent; background: none; font-family: var(--type-label-family); font-weight: var(--type-label-weight); font-size: max(var(--floor-act), var(--type-body-size)); }
+.sg-tab[aria-selected="true"] { border-block-end-color: var(--oasis); font-weight: 600; }
+
+/* ---- LoadMore: a button, never infinite scroll -------------------------------------------------------------------------- */
+.sg-loadmore { display: flex; justify-content: center; padding-block: var(--space-24); }
+
+/* ---- Card: Mist for a resting card ----------------------------------------------------------------------------------- */
+.sg-card { padding: var(--space-16); background: var(--mist); color: var(--ink); border-radius: var(--radius-md); }
+.sg-card--raised { background: var(--surface-raised); border: 1px solid var(--line); }
+.sg-card__title { font-family: var(--type-heading-family); font-weight: var(--type-heading-weight); font-size: max(var(--floor-act), var(--type-heading-size)); }
+
+/* ---- Sheet: the only element that casts a shadow (--shadow-sheet; none at night and in contrast) -------------------------- */
+.sg-scrim { position: fixed; inset: 0; background: var(--scrim); }
+.sg-sheet { position: fixed; inset-inline: 0; inset-block-end: 0; max-height: 90vh; overflow: auto; padding: var(--space-24) var(--space-16); background: var(--surface-raised); border-start-start-radius: var(--radius-lg); border-start-end-radius: var(--radius-lg); border: 1px solid var(--line); box-shadow: var(--shadow-sheet); transition: transform var(--duration-sheet) var(--ease-held); }
+.sg-sheet[hidden] { display: none; }
+
+/* ---- Nav: four destinations at most, each icon beside its word -------------------------------------------------------- */
+.sg-nav { display: flex; justify-content: space-around; border-block-start: 1px solid var(--line); background: var(--surface); }
+.sg-nav__item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-4); min-height: var(--size-primary); min-width: var(--size-touch); padding: var(--space-8) var(--space-12); color: var(--ink); text-decoration: none; font-size: max(var(--floor-label), var(--type-label-size)); }
+.sg-nav__item[aria-current="page"] { font-weight: 600; border-block-start: 2px solid var(--oasis); }
+
+/* ---- Status: icon and word, with a shape that differs per state ------------------------------------------------------- */
+.sg-status { display: inline-flex; align-items: center; gap: var(--space-8); font-size: max(var(--floor-label), var(--type-label-size)); font-weight: var(--type-label-weight); }
+.sg-status__mark { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--ink); background: var(--status-unknown); flex: none; }
+.sg-status[data-status="ok"] .sg-status__mark { background: var(--status-ok); border-color: var(--status-ok); }
+.sg-status[data-status="surveillance"] .sg-status__mark { background: var(--status-surveillance); border-style: dashed; }
+.sg-status[data-status="incident"] .sg-status__mark { background: var(--status-incident); border-color: var(--status-incident); border-radius: 2px; }
+.sg-status[data-status="unknown"] .sg-status__mark { border-style: dotted; }
+
+/* ---- Notice: a sentence, a border, no alarm colour fill ---------------------------------------------------------------- */
+.sg-notice { padding: var(--space-12) var(--space-16); border: 2px solid var(--border); border-inline-start-width: 6px; border-radius: var(--radius-sm); background: var(--surface); }
+.sg-notice[data-kind="incident"] { border-color: var(--error); }
+
+/* ---- Details ------------------------------------------------------------------------------------------------------ */
+.sg-details { border-block-end: 1px solid var(--line); }
+.sg-details > summary { display: flex; align-items: center; min-height: var(--size-touch); cursor: pointer; font-family: var(--type-label-family); font-weight: var(--type-label-weight); font-size: max(var(--floor-act), var(--type-body-size)); }
+.sg-details[open] > summary { border-block-end: 1px solid var(--line); }
+
+/* ---- Breadcrumb --------------------------------------------------------------------------------------------------- */
+.sg-breadcrumb { display: flex; flex-wrap: wrap; gap: var(--space-8); list-style: none; padding: 0; font-size: max(var(--floor-label), var(--type-small-size)); }
+.sg-breadcrumb li + li::before { content: "/"; margin-inline-end: var(--space-8); color: var(--ink-muted); }
+
+/* ---- Skeleton: static Mist, no shimmer --------------------------------------------------------------------------------- */
+.sg-skeleton { min-height: 1em; background: var(--mist); border-radius: var(--radius-sm); }
+
+/* ---- States: waiting, empty, failure, offline -------------------------------------------------------------------------- */
+[data-state] { display: grid; gap: var(--space-12); padding: var(--space-24) var(--space-16); }
+[data-state="waiting"] { border-inline-start: 2px dashed var(--border); }
+[data-state="empty"] { background: var(--surface-quiet); border-radius: var(--radius-md); }
+[data-state="failure"] { border: 2px solid var(--error); border-radius: var(--radius-md); }
+[data-state="offline"] { border: 2px dotted var(--border); border-radius: var(--radius-md); background: var(--locked-soft); }
+
+/* ---- Hero (the house register): one Oasis deep surface closed by the Line, white text only --------------------------------- */
+[data-register="site"] .hero { min-height: 72px; padding: var(--space-48) var(--space-16) var(--space-32); background: var(--oasis-deep); color: var(--on-oasis-deep); border-block-end: 2px solid var(--oasis); }
+[data-register="site"] .hero h1 { font-family: var(--type-display-family); font-weight: var(--type-display-weight); font-size: max(var(--floor-act), var(--type-display-size)); line-height: max(var(--type-display-line), 1.1em); letter-spacing: var(--type-display-tracking); }
+[data-register="site"] .hero .sg-button[data-primary] { background: var(--on-oasis-deep); color: var(--oasis-deep); border-color: var(--on-oasis-deep); }
+
+/* ---- Forced colours: borders and outlines carry the shapes ------------------------------------------------------------- */
+@media (forced-colors: active) {
+  .sg-button, .sg-chip, .sg-field__input, .sg-card, .sg-palaver, .sg-readback, .sg-receipt, .sg-sheet, .sg-notice { border: 2px solid ButtonText; }
+  .sg-button[data-primary] { border-color: Highlight; }
+  .sg-tab[aria-selected="true"], .sg-nav__item[aria-current="page"] { border-color: Highlight; }
+  .sg-edge { border-block-start: 2px solid CanvasText; background: none; height: 0; }
+  .sg-edge__fill { background: Highlight; height: 2px; }
+  .sg-status__mark { border-color: CanvasText; forced-color-adjust: none; }
+  .sg-field__error .sg-pict[data-pict="failure"] { border-color: CanvasText; }
+}
+
+/* ---- Theme button: one native button that names its state in words (kit/web/sg-theme.js) ---------------------------- */
+.sg-theme { display: inline-flex; align-items: center; min-height: var(--size-touch); padding-inline: var(--space-4); font: inherit; font-size: var(--floor-act); color: inherit; background: none; border: 0; text-decoration: underline; text-underline-offset: 0.2em; cursor: pointer; }
+.sg-theme[hidden] { display: none; }

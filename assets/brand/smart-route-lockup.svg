@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 96" width="380" height="96" role="img" aria-labelledby="t">
+  <title id="t">Smart Route</title>
+  <g fill="none" stroke="#0A3F3B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20C34 20 38 48 62 48"/><path d="M8 48H62"/><path d="M8 76C34 76 38 48 62 48"/><path d="M62 48H90"/></g>
+  <circle cx="62" cy="48" r="11" fill="#F0A437"/>
+  <text x="112" y="59" font-family="Inter Variable, Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="600" font-size="40" letter-spacing="-0.8" fill="#13242B">Smart Route</text>
+</svg>

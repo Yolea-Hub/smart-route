@@ -1,0 +1,3 @@
+#!/bin/sh
+# POSIX launcher of the Node fake CLI (see agy.js); needs node on PATH.
+exec node "$(dirname "$0")/agy.js" "$@"

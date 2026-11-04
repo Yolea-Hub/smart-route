@@ -1,0 +1,962 @@
+{
+  "meta": {
+    "name": "Sogoma",
+    "version": "4.0.2",
+    "date": "2026-10-30",
+    "note": "Source unique des jetons / single source of tokens. Ne modifiez que ce fichier, puis lancez kit/tokens/build_tokens.py. Dotted ids of the blueprint such as ref.font.budget.morning live at font.ref.budget.morning and sys.web.<step> at font.sys.web.<step>."
+  },
+  "color": {
+    "day": {
+      "surface": "#FFFFFF",
+      "surface-raised": "#FFFFFF",
+      "surface-quiet": "#F4F7F5",
+      "mist": "#D6EBE3",
+      "ink": "#13242B",
+      "ink-muted": "#4B5D63",
+      "oasis": "#0E6A62",
+      "on-oasis": "#FFFFFF",
+      "oasis-deep": "#0A3F3B",
+      "on-oasis-deep": "#FFFFFF",
+      "dawn": "#F0A437",
+      "on-dawn": "#13242B",
+      "dawn-ink": "#8A5B1A",
+      "dawn-soft": "#FEF6EB",
+      "line": "#C9D6D3",
+      "border": "#7A8E8B",
+      "focus": "#0E6A62",
+      "success": "#0E6A62",
+      "success-soft": "#F1F6F6",
+      "error": "#A33A2B",
+      "error-soft": "#F6EBEA",
+      "locked": "#6F8380",
+      "locked-soft": "#EEF2F0",
+      "scrim": "#13242B73"
+    },
+    "night": {
+      "surface": "#0D191E",
+      "surface-raised": "#15262D",
+      "surface-quiet": "#101E23",
+      "mist": "#1C3A36",
+      "ink": "#EDF4F1",
+      "ink-muted": "#A6B8B4",
+      "oasis": "#57C2B4",
+      "on-oasis": "#06211E",
+      "oasis-deep": "#2F6E66",
+      "on-oasis-deep": "#EDF4F1",
+      "dawn": "#F4B557",
+      "on-dawn": "#13242B",
+      "dawn-ink": "#F4B557",
+      "dawn-soft": "#2B2110",
+      "line": "#26393F",
+      "border": "#6F8C8A",
+      "focus": "#57C2B4",
+      "success": "#57C2B4",
+      "success-soft": "#12302C",
+      "error": "#E59A8E",
+      "error-soft": "#2E1715",
+      "locked": "#6F8C8A",
+      "locked-soft": "#101E23",
+      "scrim": "#00000099"
+    },
+    "contrast": {
+      "ink": "#0A1418",
+      "oasis": "#054A44",
+      "oasis-deep": "#032B28",
+      "line": "#5A6F6C",
+      "border": "#27383D",
+      "focus": "#054A44",
+      "on-oasis": "#FFFFFF",
+      "on-oasis-deep": "#FFFFFF",
+      "on-dawn": "#0A1418"
+    }
+  },
+  "color_notes": {
+    "contrast": "Overlay applied by [data-contrast=\"more\"] and @media (prefers-contrast: more). It redefines only these nine tokens (values of kit v3 Contrast) and sets --shadow-sheet to none. It is a Day overlay: under Night the Night values win.",
+    "tokens_per_theme": 25
+  },
+  "shadow": {
+    "day": {
+      "sheet": "0 12px 32px rgba(10,63,59,.14)"
+    },
+    "night": {
+      "sheet": "none"
+    },
+    "contrast": {
+      "sheet": "none"
+    }
+  },
+  "scale": {
+    "steps": [
+      50,
+      100,
+      200,
+      300,
+      400,
+      500,
+      600,
+      700,
+      800,
+      900
+    ],
+    "oasis": [
+      "#F1F6F6",
+      "#D6EBE3",
+      "#ADCCCA",
+      "#82B2AD",
+      "#569791",
+      "#307F78",
+      "#0E6A62",
+      "#0B564F",
+      "#0A3F3B",
+      "#06312E"
+    ],
+    "dawn": [
+      "#FEF6EB",
+      "#FBE9CF",
+      "#F8D7A7",
+      "#F5C37B",
+      "#F4B557",
+      "#F0A437",
+      "#CF8D2E",
+      "#AB7324",
+      "#8A5B1A",
+      "#623F0F"
+    ],
+    "mist": [
+      "#F4F7F5",
+      "#E9EFEC",
+      "#C9D6D3",
+      "#A9B9B5",
+      "#7A8E8B",
+      "#5F7275",
+      "#4B5D63",
+      "#35474D",
+      "#22343A",
+      "#13242B"
+    ]
+  },
+  "type": {
+    "floors": {
+      "act": 16,
+      "label": 14,
+      "caption": 13,
+      "caption_allow": [
+        "caption",
+        ".sg-sky__name"
+      ]
+    },
+    "breakpoints": {
+      "tablet": 600,
+      "desktop": 1024
+    },
+    "steps": {
+      "display": {
+        "family": "voice",
+        "face": "voice-display",
+        "weight": 500,
+        "tracking": "-0.01em",
+        "floor": 16,
+        "phone": {
+          "size": 44,
+          "line": 50
+        },
+        "tablet": {
+          "size": 52,
+          "line": 58
+        },
+        "desktop": {
+          "size": 64,
+          "line": 70
+        }
+      },
+      "voice-lg": {
+        "family": "voice",
+        "weight": 500,
+        "floor": 16,
+        "phone": {
+          "size": 32,
+          "line": 38
+        },
+        "tablet": {
+          "size": 36,
+          "line": 42
+        },
+        "desktop": {
+          "size": 40,
+          "line": 46
+        }
+      },
+      "voice-md": {
+        "family": "voice",
+        "weight": 400,
+        "floor": 16,
+        "phone": {
+          "size": 24,
+          "line": 32
+        },
+        "desktop": {
+          "size": 28,
+          "line": 36
+        }
+      },
+      "voice-sm": {
+        "family": "voice",
+        "weight": 400,
+        "floor": 16,
+        "phone": {
+          "size": 18,
+          "line": 28
+        },
+        "desktop": {
+          "size": 20,
+          "line": 30
+        }
+      },
+      "voice-xs": {
+        "family": "voice",
+        "weight": 400,
+        "floor": 16,
+        "phone": {
+          "size": 16,
+          "line": 24
+        },
+        "desktop": {
+          "size": 16,
+          "line": 24
+        }
+      },
+      "heading": {
+        "family": "hand",
+        "weight": 600,
+        "floor": 16,
+        "phone": {
+          "size": 20,
+          "line": 28
+        },
+        "desktop": {
+          "size": 22,
+          "line": 30
+        }
+      },
+      "body": {
+        "family": "hand",
+        "weight": 400,
+        "floor": 16,
+        "phone": {
+          "size": 16,
+          "line": 26
+        },
+        "desktop": {
+          "size": 17,
+          "line": 28
+        }
+      },
+      "small": {
+        "family": "hand",
+        "weight": 400,
+        "floor": 14,
+        "phone": {
+          "size": 14,
+          "line": 22
+        },
+        "desktop": {
+          "size": 14,
+          "line": 22
+        }
+      },
+      "label": {
+        "family": "hand",
+        "weight": 500,
+        "tracking": "0.005em",
+        "floor": 14,
+        "phone": {
+          "size": 14,
+          "line": 20
+        },
+        "desktop": {
+          "size": 14,
+          "line": 20
+        }
+      },
+      "amount": {
+        "family": "hand",
+        "weight": 600,
+        "tnum": true,
+        "floor": 16,
+        "phone": {
+          "size": 28,
+          "line": 32
+        },
+        "desktop": {
+          "size": 32,
+          "line": 36
+        }
+      },
+      "amount-sm": {
+        "family": "hand",
+        "weight": 500,
+        "tnum": true,
+        "floor": 16,
+        "phone": {
+          "size": 18,
+          "line": 24
+        },
+        "desktop": {
+          "size": 18,
+          "line": 24
+        }
+      },
+      "caption": {
+        "family": "hand",
+        "weight": 400,
+        "floor": 13,
+        "phone": {
+          "size": 13,
+          "line": 18
+        },
+        "desktop": {
+          "size": 13,
+          "line": 18
+        }
+      },
+      "mono": {
+        "family": "mono",
+        "weight": 400,
+        "floor": 14,
+        "phone": {
+          "size": 14,
+          "line": 22
+        },
+        "desktop": {
+          "size": 14,
+          "line": 22
+        }
+      },
+      "code": {
+        "family": "mono",
+        "weight": 400,
+        "floor": 14,
+        "phone": {
+          "size": 14,
+          "line": 20
+        },
+        "desktop": {
+          "size": 14,
+          "line": 20
+        }
+      }
+    }
+  },
+  "space": {
+    "4": 4,
+    "8": 8,
+    "12": 12,
+    "16": 16,
+    "24": 24,
+    "32": 32,
+    "48": 48,
+    "64": 64,
+    "96": 96
+  },
+  "radius": {
+    "sm": 8,
+    "md": 16,
+    "lg": 24,
+    "pill": 999
+  },
+  "motion": {
+    "duration": {
+      "micro": 120,
+      "state": 200,
+      "sheet": 320,
+      "sun": 800
+    },
+    "ease": {
+      "held": [
+        0,
+        0.5,
+        0.25,
+        0.78
+      ],
+      "held_source": "First cubic Bezier segment of the path in kit/logos/yolea-mark.svg: M44 84 C44 66 45 56 40 48, i.e. P0 (44,84), P1 (44,66), P2 (45,56), P3 (40,48) in the 96 grid. Frame: origin at P0, progress axis y with P3 at 1 (progress = (84 - y) / 36), lateral axis x measured as the unsigned distance from P0 (|x - 44| / |40 - 44|), so the control points become P1 = (0/4, 18/36) and P2 = (1/4, 28/36); rounded to two decimals this is cubic-bezier(0, 0.5, 0.25, 0.78). Published again as <path id=\"ease-held\"> in kit/marks/fil.svg.",
+      "leave": [
+        0.4,
+        0,
+        1,
+        1
+      ]
+    }
+  },
+  "size": {
+    "touch": 44,
+    "primary": 48,
+    "measure": 560,
+    "page": 1120
+  },
+  "font": {
+    "ref": {
+      "family": {
+        "voice": "Newsreader",
+        "hand": "Inter",
+        "mono": "JetBrains Mono",
+        "arabic": {
+          "body": "Noto Naskh Arabic",
+          "label": "Noto Sans Arabic",
+          "quote": "Amiri"
+        }
+      },
+      "weight": {
+        "regular": 400,
+        "medium": 500,
+        "semibold": 600
+      },
+      "size": {
+        "13": 13,
+        "14": 14,
+        "16": 16,
+        "17": 17,
+        "18": 18,
+        "20": 20,
+        "22": 22,
+        "24": 24,
+        "28": 28,
+        "32": 32,
+        "40": 40,
+        "44": 44,
+        "52": 52,
+        "64": 64
+      },
+      "budget": {
+        "morning": 120,
+        "maison": 121.6,
+        "statement": 149.1,
+        "apk": 834.7,
+        "hidayah": null
+      },
+      "budget_unit": "KB (1 KB = 1000 bytes of woff2 on the wire; apk and hidayah in KB of font files)"
+    },
+    "sys": {
+      "web": {
+        "display": {
+          "family": "voice",
+          "weight": 500,
+          "size": {
+            "phone": 44,
+            "tablet": 52,
+            "desktop": 64
+          },
+          "line": {
+            "phone": 50,
+            "tablet": 58,
+            "desktop": 70
+          },
+          "opsz_cut": 44,
+          "file": "newsreader-500-opsz44"
+        },
+        "voice-lg": {
+          "family": "voice",
+          "weight": 500,
+          "size": {
+            "phone": 32,
+            "tablet": 36,
+            "desktop": 40
+          },
+          "line": {
+            "phone": 38,
+            "tablet": 42,
+            "desktop": 46
+          },
+          "opsz_cut": 32,
+          "file": "newsreader-500-opsz32"
+        },
+        "voice-md": {
+          "family": "voice",
+          "weight": 400,
+          "size": {
+            "phone": 24,
+            "tablet": 24,
+            "desktop": 28
+          },
+          "line": {
+            "phone": 32,
+            "tablet": 32,
+            "desktop": 36
+          },
+          "opsz_cut": 20,
+          "file": "newsreader-400-opsz20"
+        },
+        "voice-sm": {
+          "family": "voice",
+          "weight": 400,
+          "size": {
+            "phone": 18,
+            "tablet": 18,
+            "desktop": 20
+          },
+          "line": {
+            "phone": 28,
+            "tablet": 28,
+            "desktop": 30
+          },
+          "opsz_cut": 20,
+          "file": "newsreader-400-opsz20"
+        },
+        "voice-xs": {
+          "family": "voice",
+          "weight": 400,
+          "size": {
+            "phone": 16,
+            "tablet": 16,
+            "desktop": 16
+          },
+          "line": {
+            "phone": 24,
+            "tablet": 24,
+            "desktop": 24
+          },
+          "opsz_cut": 20,
+          "file": "newsreader-400-opsz20"
+        },
+        "heading": {
+          "family": "hand",
+          "weight": 600,
+          "size": {
+            "phone": 20,
+            "tablet": 20,
+            "desktop": 22
+          },
+          "line": {
+            "phone": 28,
+            "tablet": 28,
+            "desktop": 30
+          },
+          "opsz_cut": 24,
+          "file": "inter-600-opsz24"
+        },
+        "body": {
+          "family": "hand",
+          "weight": 400,
+          "size": {
+            "phone": 16,
+            "tablet": 16,
+            "desktop": 17
+          },
+          "line": {
+            "phone": 26,
+            "tablet": 26,
+            "desktop": 28
+          },
+          "opsz_cut": 14,
+          "file": "inter-400-opsz14"
+        },
+        "small": {
+          "family": "hand",
+          "weight": 400,
+          "size": {
+            "phone": 14,
+            "tablet": 14,
+            "desktop": 14
+          },
+          "line": {
+            "phone": 22,
+            "tablet": 22,
+            "desktop": 22
+          },
+          "opsz_cut": 14,
+          "file": "inter-400-opsz14"
+        },
+        "label": {
+          "family": "hand",
+          "weight": 500,
+          "size": {
+            "phone": 14,
+            "tablet": 14,
+            "desktop": 14
+          },
+          "line": {
+            "phone": 20,
+            "tablet": 20,
+            "desktop": 20
+          },
+          "opsz_cut": 14,
+          "file": "inter-500-opsz14"
+        },
+        "amount": {
+          "family": "hand",
+          "weight": 600,
+          "size": {
+            "phone": 28,
+            "tablet": 28,
+            "desktop": 32
+          },
+          "line": {
+            "phone": 32,
+            "tablet": 32,
+            "desktop": 36
+          },
+          "opsz_cut": 24,
+          "file": "inter-600-opsz24",
+          "tnum": true
+        },
+        "amount-sm": {
+          "family": "hand",
+          "weight": 500,
+          "size": {
+            "phone": 18,
+            "tablet": 18,
+            "desktop": 18
+          },
+          "line": {
+            "phone": 24,
+            "tablet": 24,
+            "desktop": 24
+          },
+          "opsz_cut": 14,
+          "file": "inter-500-opsz14",
+          "tnum": true
+        },
+        "caption": {
+          "family": "hand",
+          "weight": 400,
+          "size": {
+            "phone": 13,
+            "tablet": 13,
+            "desktop": 13
+          },
+          "line": {
+            "phone": 18,
+            "tablet": 18,
+            "desktop": 18
+          },
+          "opsz_cut": 14,
+          "file": "inter-400-opsz14"
+        },
+        "mono": {
+          "family": "mono",
+          "weight": 400,
+          "size": {
+            "phone": 14,
+            "tablet": 14,
+            "desktop": 14
+          },
+          "line": {
+            "phone": 22,
+            "tablet": 22,
+            "desktop": 22
+          },
+          "opsz_cut": null,
+          "file": "jetbrainsmono-400"
+        },
+        "code": {
+          "family": "mono",
+          "weight": 400,
+          "size": {
+            "phone": 14,
+            "tablet": 14,
+            "desktop": 14
+          },
+          "line": {
+            "phone": 20,
+            "tablet": 20,
+            "desktop": 20
+          },
+          "opsz_cut": null,
+          "file": "jetbrainsmono-400"
+        }
+      },
+      "flt": {
+        "display": {
+          "family": "Newsreader",
+          "weight": 500,
+          "size": 44,
+          "size_desktop": 64,
+          "line": 50,
+          "line_desktop": 70,
+          "opsz": "size*textScaler"
+        },
+        "voice-lg": {
+          "family": "Newsreader",
+          "weight": 500,
+          "size": 32,
+          "size_desktop": 40,
+          "line": 38,
+          "line_desktop": 46,
+          "opsz": "size*textScaler"
+        },
+        "voice-md": {
+          "family": "Newsreader",
+          "weight": 400,
+          "size": 24,
+          "size_desktop": 28,
+          "line": 32,
+          "line_desktop": 36,
+          "opsz": "size*textScaler"
+        },
+        "voice-sm": {
+          "family": "Newsreader",
+          "weight": 400,
+          "size": 18,
+          "size_desktop": 20,
+          "line": 28,
+          "line_desktop": 30,
+          "opsz": "size*textScaler"
+        },
+        "voice-xs": {
+          "family": "Newsreader",
+          "weight": 400,
+          "size": 16,
+          "size_desktop": 16,
+          "line": 24,
+          "line_desktop": 24,
+          "opsz": "size*textScaler"
+        },
+        "heading": {
+          "family": "Inter",
+          "weight": 600,
+          "size": 20,
+          "size_desktop": 22,
+          "line": 28,
+          "line_desktop": 30,
+          "opsz": "size*textScaler"
+        },
+        "body": {
+          "family": "Inter",
+          "weight": 400,
+          "size": 16,
+          "size_desktop": 17,
+          "line": 26,
+          "line_desktop": 28,
+          "opsz": "size*textScaler"
+        },
+        "small": {
+          "family": "Inter",
+          "weight": 400,
+          "size": 14,
+          "size_desktop": 14,
+          "line": 22,
+          "line_desktop": 22,
+          "opsz": "size*textScaler"
+        },
+        "label": {
+          "family": "Inter",
+          "weight": 500,
+          "size": 14,
+          "size_desktop": 14,
+          "line": 20,
+          "line_desktop": 20,
+          "opsz": "size*textScaler"
+        },
+        "amount": {
+          "family": "Inter",
+          "weight": 600,
+          "size": 28,
+          "size_desktop": 32,
+          "line": 32,
+          "line_desktop": 36,
+          "opsz": "size*textScaler",
+          "tnum": true
+        },
+        "amount-sm": {
+          "family": "Inter",
+          "weight": 500,
+          "size": 18,
+          "size_desktop": 18,
+          "line": 24,
+          "line_desktop": 24,
+          "opsz": "size*textScaler",
+          "tnum": true
+        },
+        "caption": {
+          "family": "Inter",
+          "weight": 400,
+          "size": 13,
+          "size_desktop": 13,
+          "line": 18,
+          "line_desktop": 18,
+          "opsz": "size*textScaler"
+        },
+        "mono": {
+          "family": "JetBrains Mono",
+          "weight": 400,
+          "size": 14,
+          "size_desktop": 14,
+          "line": 22,
+          "line_desktop": 22,
+          "opsz": null
+        },
+        "code": {
+          "family": "JetBrains Mono",
+          "weight": 400,
+          "size": 14,
+          "size_desktop": 14,
+          "line": 20,
+          "line_desktop": 20,
+          "opsz": null
+        }
+      }
+    }
+  },
+  "chart": {
+    "rules": {
+      "max_series": 4,
+      "ground": {
+        "day": "surface",
+        "night": "surface"
+      },
+      "outline_below": 3.0,
+      "adjacency": {
+        "watch": 1.8,
+        "workshop": 3.0,
+        "workshop_alternative": "gap+pattern",
+        "night_min": 1.4
+      },
+      "single_series_anchor": "oasis",
+      "tie_tolerance": 0.05,
+      "note": "Series selections are computed by build_tokens.py and written into the generated files; they are not typed here."
+    },
+    "certainty": {
+      "notdue": {
+        "day": "scale:oasis-100",
+        "night": "scale:oasis-800",
+        "outline": true
+      },
+      "promised": {
+        "day": "scale:oasis-400",
+        "night": "scale:oasis-500"
+      },
+      "overdue": {
+        "day": "scale:oasis-800",
+        "night": "scale:oasis-200",
+        "pattern": "hatch"
+      }
+    },
+    "div": {
+      "day": [
+        "scale:oasis-800",
+        "scale:oasis-400",
+        "scale:mist-100",
+        "scale:dawn-700",
+        "scale:dawn-800"
+      ],
+      "night": [
+        "scale:oasis-100",
+        "scale:oasis-300",
+        "scale:mist-600",
+        "scale:dawn-400",
+        "scale:dawn-600"
+      ],
+      "neutral_outline": true
+    },
+    "pattern": {
+      "dots": {
+        "dot_px": 2,
+        "pitch_px": 6
+      },
+      "hatch": {
+        "stroke_px": 1,
+        "angle_deg": 45,
+        "pitch_px": 4
+      },
+      "cross": {
+        "stroke_px": 1,
+        "angle_deg": 45,
+        "pitch_px": 6,
+        "both_diagonals": true
+      }
+    },
+    "axis": "token:border",
+    "grid": "token:line",
+    "label": "token:ink-muted"
+  },
+  "status": {
+    "ok": {
+      "day": {
+        "fill": "scale:oasis-600"
+      },
+      "night": {
+        "fill": "token:oasis"
+      },
+      "word_fr": "En marche",
+      "word_en": "Running"
+    },
+    "surveillance": {
+      "day": {
+        "fill": "scale:mist-200",
+        "pattern": "hatch"
+      },
+      "night": {
+        "fill": "token:mist",
+        "pattern": "hatch"
+      },
+      "word_fr": "Sous surveillance",
+      "word_en": "Under watch"
+    },
+    "incident": {
+      "day": {
+        "fill": "token:error"
+      },
+      "night": {
+        "fill": "token:error"
+      },
+      "word_fr": "Incident",
+      "word_en": "Incident"
+    },
+    "unknown": {
+      "day": {
+        "fill": "scale:mist-100",
+        "pattern": "dots"
+      },
+      "night": {
+        "fill": "token:surface-raised",
+        "pattern": "dots"
+      },
+      "word_fr": "Inconnu",
+      "word_en": "Unknown"
+    }
+  },
+  "migration": {
+    "kept": [
+      "color.day (v3 color.light), all 24 hex values",
+      "color.night (v3 color.dark), all 24 hex values",
+      "color.contrast (nine tokens only, hex values of v3 color.contrast)",
+      "scale.oasis, scale.dawn, scale.mist (30 hex values)",
+      "size.page = 1120 (v3 size.page-max)"
+    ],
+    "renamed": {
+      "color.light": "color.day",
+      "color.dark": "color.night",
+      "data-theme=\"light\"": "data-theme=\"day\"",
+      "data-theme=\"dark\"": "data-theme=\"night\"",
+      "data-theme=\"contrast\"": "data-contrast=\"more\"",
+      "space.1..20 (4,8,12,16,20,24,32,40,48,64,80)": "space.4,8,12,16,24,32,48,64,96 (named by pixels)",
+      "radius.xs,sm,md,lg,full (4,6,14,28,999)": "radius.sm,md,lg,pill (8,16,24,999)",
+      "motion.duration.instant,quick,calm,settle (100,150,250,700)": "motion.duration.micro,state,sheet,sun (120,200,320,800)",
+      "motion.ease.out,in-out": "motion.ease.held,leave",
+      "size.touch-min 44": "size.touch 44",
+      "size.touch-comfort 52": "size.primary 48",
+      "size.content-max 680": "size.measure 560",
+      "size.page-max 1120": "size.page 1120",
+      "type.display-xl,display,title-lg,title,quote,heading,lead,body,small,label": "type.steps display,voice-lg,voice-md,voice-sm,voice-xs,heading,body,small,label,amount,amount-sm,caption,mono,code"
+    },
+    "removed": [
+      "shadow.light.1,2,3 and shadow.dark.1,2,3 (v4 has --shadow-sheet only)",
+      "shadow.*.halo-dawn",
+      "illustration.* (v3 scene palette; the 24 v3 illustrations are retired)",
+      "font.display,sans,arabic stacks of v3 (Readex Pro and Amiri dropped; see font.ref.family)",
+      "type.display-ar,body-ar (Hidayah addendum, phase 2)",
+      "size.border-width,focus-width,focus-offset,icon (literals in base.css)",
+      "space.5,10,20 (20,40,80 px)",
+      "z.* (literals in components.css)",
+      "motion.duration.instant,quick,calm,settle (replaced)"
+    ],
+    "added": [
+      "--shadow-sheet",
+      "type.steps (14 steps)",
+      "font block",
+      "chart block",
+      "status block",
+      "motion.ease.held from the logo",
+      "contrast overlay selectors [data-contrast=\"more\"]"
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	// Landing page of Smart Route (smartroute.yolea.ai): static assets only, no Worker code.
+	// Deploy by hand: `pnpm run deploy` from this folder (builds, runs the guard, then `wrangler deploy`). Nothing deploys from CI.
+	"name": "smart-route-site",
+	"compatibility_date": "2026-10-30",
+	// No workers.dev or version (preview) URLs: the site answers on its own domain only.
+	"workers_dev": false,
+	"preview_urls": false,
+	// Custom Domain: Cloudflare creates the DNS record and the certificate for smartroute.yolea.ai (zone yolea.ai, same account).
+	// Rollback of the domain itself = remove this entry and deploy, or delete the Custom Domain in the dashboard.
+	"routes": [{ "pattern": "smartroute.yolea.ai", "custom_domain": true }],
+	// Invocation logs record request metadata (client IP, User-Agent): off, the privacy page says we keep nothing.
+	"observability": { "enabled": false },
+	// Wrangler runs the guard itself, from this folder, before any deploy: a bare `wrangler deploy` is guarded too.
+	"build": { "command": "bash guard-fresh-build.sh ../dist" },
+	"assets": {
+		"directory": "../dist",
+		"not_found_handling": "404-page",
+		"html_handling": "auto-trailing-slash"
+	}
+}

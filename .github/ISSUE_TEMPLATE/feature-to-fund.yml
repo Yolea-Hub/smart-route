@@ -1,0 +1,29 @@
+name: Fonction à financer / Feature to fund
+description: Proposez une fonction. Les plus soutenues passent sur la page Soutenir. / Suggest a feature. The most backed ones go on the Support page.
+labels: ["feature-to-fund"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ajoutez un pouce levé aux tickets qui comptent pour vous : c'est ainsi que la communauté décide de la suite.
+        Add a thumbs-up to the issues that matter to you: this is how the community decides what comes next.
+  - type: textarea
+    id: need
+    attributes:
+      label: Le besoin / The need
+      description: Qui en a besoin, et pour faire quoi ? / Who needs it, and to do what?
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Comment vous l'imaginez / How you picture it
+  - type: dropdown
+    id: help
+    attributes:
+      label: Pouvez-vous aider ? / Can you help?
+      options:
+        - Je veux seulement la voir arriver / I just want to see it happen
+        - Je peux tester / I can test it
+        - Je peux écrire le code / I can write the code
+        - Je peux contribuer à son financement / I can contribute to funding it

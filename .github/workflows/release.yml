@@ -1,0 +1,145 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      macos:
+        description: "Also build macOS (always built on tags)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build ${{ matrix.name }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON((startsWith(github.ref, 'refs/tags/v') || inputs.macos) && '[{"name":"linux","runner":"ubuntu-latest","dist":"dist:linux","glob":"release/*.AppImage\nrelease/*.deb"},{"name":"windows","runner":"windows-latest","dist":"dist:win","glob":"release/*.exe"},{"name":"macos","runner":"macos-15-intel","dist":"dist:mac","glob":"release/*.dmg"}]' || '[{"name":"linux","runner":"ubuntu-latest","dist":"dist:linux","glob":"release/*.AppImage\nrelease/*.deb"},{"name":"windows","runner":"windows-latest","dist":"dist:win","glob":"release/*.exe"}]') }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+
+      - name: Check the tag matches package.json
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(node -p "require('./package.json').version")"
+          if [ "${GITHUB_REF_NAME}" != "v${version}" ]; then
+            echo "tag ${GITHUB_REF_NAME} does not match package.json version ${version}" >&2
+            exit 1
+          fi
+
+      - name: Test
+        run: pnpm test
+
+      - name: Package
+        run: pnpm run ${{ matrix.dist }}
+
+      - name: Smoke (Linux AppImage)
+        if: matrix.name == 'linux'
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(node -p "require('./package.json').version")"
+          chmod +x release/*.AppImage
+          out="$(SMART_ROUTE_SMOKE=1 APPIMAGE_EXTRACT_AND_RUN=1 timeout 120 xvfb-run -a release/Smart-Route-"${version}"-linux-x86_64.AppImage --no-sandbox)"
+          echo "$out"
+          echo "$out" | grep -F "smart-route $version"
+
+      - name: Smoke (Windows unpacked app)
+        if: matrix.name == 'windows'
+        shell: pwsh
+        run: |
+          $version = node -p "require('./package.json').version"
+          $env:SMART_ROUTE_SMOKE = '1'
+          $exe = Join-Path $PWD 'release/win-unpacked/Smart Route.exe'
+          $out = Join-Path $env:RUNNER_TEMP 'smoke.txt'
+          $p = Start-Process -FilePath $exe -Wait -PassThru -RedirectStandardOutput $out
+          Get-Content $out
+          if ($p.ExitCode -ne 0) { throw "exit code $($p.ExitCode)" }
+          if (-not (Select-String -Path $out -SimpleMatch -Quiet "smart-route $version")) { throw 'version line missing' }
+
+      - name: Smoke (macOS app)
+        if: matrix.name == 'macos'
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(node -p "require('./package.json').version")"
+          # macOS has no coreutils `timeout`; perl's alarm gives the same 120 s ceiling.
+          # `exec { $ARGV[0] } @ARGV` (indirect-object form) never splits the path on spaces:
+          # a plain `exec @ARGV` with the single argument "Smart Route" went through execvp
+          # word splitting and failed with exit 2 before the app was ever started.
+          # Intel runner (macos-15-intel: arm64 capacity was exhausted): run the app built for this CPU.
+          case "$(uname -m)" in arm64) dir=release/mac-arm64 ;; *) dir=release/mac ;; esac
+          app="$(ls -d "$dir"/*.app | head -n 1)"
+          bin="$(ls "$app/Contents/MacOS/" | head -n 1)"
+          echo "smoke binary: $app/Contents/MacOS/$bin"
+          status=0
+          out="$(SMART_ROUTE_SMOKE=1 perl -we 'alarm 120; exec { $ARGV[0] } @ARGV or die "exec failed: $!\n"' "$app/Contents/MacOS/$bin" 2>&1)" || status=$?
+          echo "$out"
+          echo "exit code: $status"
+          [ "$status" -eq 0 ]
+          echo "$out" | grep -F "smart-route $version"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: installers-${{ matrix.name }}
+          path: ${{ matrix.glob }}
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    name: Publish GitHub release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          path: dist-all
+          pattern: installers-*
+          merge-multiple: true
+
+      - name: Checksums and release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd dist-all
+          ls -l
+          sha256sum -- * > ../SHA256SUMS
+          mv ../SHA256SUMS ./SHA256SUMS
+          cat SHA256SUMS
+          gh release create "$TAG" ./* \
+            --repo "$GITHUB_REPOSITORY" \
+            --verify-tag \
+            --title "Smart Route ${TAG#v}" \
+            --generate-notes

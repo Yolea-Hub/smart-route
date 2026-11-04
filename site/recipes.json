@@ -1,0 +1,1071 @@
+{
+  "roles": [
+    {
+      "id": "developer",
+      "name": {
+        "fr": "Développeur",
+        "en": "Developer"
+      },
+      "hint": {
+        "fr": "Code, bugs, relectures",
+        "en": "Code, bugs, reviews"
+      }
+    },
+    {
+      "id": "manager",
+      "name": {
+        "fr": "Manager",
+        "en": "Manager"
+      },
+      "hint": {
+        "fr": "Réunions, rapports, décisions",
+        "en": "Meetings, reports, decisions"
+      }
+    },
+    {
+      "id": "marketing",
+      "name": {
+        "fr": "Marketing",
+        "en": "Marketing"
+      },
+      "hint": {
+        "fr": "Campagnes, textes, publications",
+        "en": "Campaigns, copy, posts"
+      }
+    },
+    {
+      "id": "image",
+      "name": {
+        "fr": "Création d’images",
+        "en": "Image creation"
+      },
+      "hint": {
+        "fr": "Idées, descriptions, séries d’images",
+        "en": "Ideas, descriptions, image sets"
+      }
+    },
+    {
+      "id": "video",
+      "name": {
+        "fr": "Vidéo",
+        "en": "Video"
+      },
+      "hint": {
+        "fr": "Scripts, découpages, clips",
+        "en": "Scripts, shot lists, clips"
+      }
+    },
+    {
+      "id": "research",
+      "name": {
+        "fr": "Recherche",
+        "en": "Research"
+      },
+      "hint": {
+        "fr": "Sources, synthèses, lectures critiques",
+        "en": "Sources, syntheses, critical reading"
+      }
+    },
+    {
+      "id": "student",
+      "name": {
+        "fr": "Étudiant",
+        "en": "Student"
+      },
+      "hint": {
+        "fr": "Comprendre, réviser, progresser",
+        "en": "Understand, revise, improve"
+      }
+    },
+    {
+      "id": "entrepreneur",
+      "name": {
+        "fr": "Entrepreneur",
+        "en": "Entrepreneur"
+      },
+      "hint": {
+        "fr": "Idées, offres, pitch",
+        "en": "Ideas, offers, pitch"
+      }
+    }
+  ],
+  "tools": {
+    "claude-code": {
+      "fr": "Claude Code",
+      "en": "Claude Code"
+    },
+    "codex": {
+      "fr": "Codex",
+      "en": "Codex"
+    },
+    "agy": {
+      "fr": "Antigravity",
+      "en": "Antigravity"
+    },
+    "cowork": {
+      "fr": "Cowork (claude.ai)",
+      "en": "Cowork (claude.ai)"
+    },
+    "chatgpt-work": {
+      "fr": "ChatGPT sur le web",
+      "en": "ChatGPT on the web"
+    },
+    "gemini-tasks": {
+      "fr": "Gemini sur le web",
+      "en": "Gemini on the web"
+    }
+  },
+  "recipes": [
+    {
+      "id": "dev-feature",
+      "role": "developer",
+      "title": {
+        "fr": "Ajouter une fonctionnalité, relue par un autre éditeur",
+        "en": "Add a feature, reviewed by another vendor"
+      },
+      "desc": {
+        "fr": "Un plan, le code, puis une relecture par un outil d’un autre éditeur.",
+        "en": "A plan, the code, then a review by a tool from another vendor."
+      },
+      "steps": [
+        {
+          "tool": "claude-code",
+          "role": "plan",
+          "tier": 2,
+          "instruction": {
+            "fr": "Propose un plan court : fichiers touchés, cas limites, comment vérifier.",
+            "en": "Propose a short plan: files involved, edge cases, how to verify."
+          }
+        },
+        {
+          "tool": "claude-code",
+          "role": "execute",
+          "tier": 1,
+          "instruction": {
+            "fr": "Applique le plan, sans rien ajouter. Modifie des fichiers seulement si les modifications sont autorisées dans les Réglages.",
+            "en": "Apply the plan, adding nothing. Edit files only if edits are allowed in Settings."
+          }
+        },
+        {
+          "tool": "codex",
+          "role": "review",
+          "tier": 2,
+          "instruction": {
+            "fr": "Relis le résultat : correction, sécurité, tests. Rends un verdict avec les problèmes précis.",
+            "en": "Review the result: correctness, security, tests. Give a verdict with the precise issues."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dev-bug",
+      "role": "developer",
+      "title": {
+        "fr": "Trouver et corriger un bug",
+        "en": "Find and fix a bug"
+      },
+      "desc": {
+        "fr": "Un outil cherche la cause, un autre corrige, un troisième vérifie.",
+        "en": "One tool finds the cause, another fixes it, a third checks."
+      },
+      "steps": [
+        {
+          "tool": "codex",
+          "role": "plan",
+          "tier": 1,
+          "instruction": {
+            "fr": "Cherche la cause probable et propose la correction minimale, sans modifier de fichier.",
+            "en": "Look for the likely cause and propose the smallest fix, without editing any file."
+          }
+        },
+        {
+          "tool": "claude-code",
+          "role": "execute",
+          "tier": 1,
+          "instruction": {
+            "fr": "Applique la correction proposée.",
+            "en": "Apply the proposed fix."
+          }
+        },
+        {
+          "tool": "agy",
+          "role": "review",
+          "tier": 1,
+          "instruction": {
+            "fr": "Vérifie que la correction règle le bug sans en créer un autre.",
+            "en": "Check that the fix solves the bug without creating another."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dev-audit",
+      "role": "developer",
+      "title": {
+        "fr": "Revue de code en double lecture",
+        "en": "Code review by two readers"
+      },
+      "desc": {
+        "fr": "Deux outils de deux éditeurs relisent le même code, en lecture seule.",
+        "en": "Two tools from two vendors read the same code, read-only."
+      },
+      "steps": [
+        {
+          "tool": "codex",
+          "role": "review",
+          "tier": 2,
+          "instruction": {
+            "fr": "Première lecture : sécurité et cas limites.",
+            "en": "First reading: security and edge cases."
+          }
+        },
+        {
+          "tool": "claude-code",
+          "role": "review",
+          "tier": 2,
+          "instruction": {
+            "fr": "Seconde lecture, indépendante : ce que la première a manqué.",
+            "en": "Second, independent reading: what the first one missed."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mgr-meeting",
+      "role": "manager",
+      "title": {
+        "fr": "De la réunion au plan d’action",
+        "en": "From meeting to action plan"
+      },
+      "desc": {
+        "fr": "Un compte rendu clair, puis des actions avec responsable et date.",
+        "en": "Clear minutes, then actions with an owner and a date."
+      },
+      "steps": [
+        {
+          "tool": "claude-code",
+          "role": "plan",
+          "tier": 1,
+          "instruction": {
+            "fr": "Mets les notes au propre : décisions prises, points ouverts.",
+            "en": "Tidy the notes: decisions made, open points."
+          }
+        },
+        {
+          "tool": "agy",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Transforme-les en actions : qui, quoi, pour quand.",
+            "en": "Turn them into actions: who, what, by when."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mgr-report",
+      "role": "manager",
+      "title": {
+        "fr": "Le rapport hebdomadaire en une page",
+        "en": "The weekly report on one page"
+      },
+      "desc": {
+        "fr": "Des notes en vrac deviennent un rapport court pour votre direction.",
+        "en": "Loose notes become a short report for your leadership."
+      },
+      "steps": [
+        {
+          "tool": "claude-code",
+          "role": "plan",
+          "tier": 1,
+          "instruction": {
+            "fr": "Rédige le rapport : résultats, risques, prochaines étapes.",
+            "en": "Write the report: results, risks, next steps."
+          }
+        },
+        {
+          "tool": "agy",
+          "role": "single",
+          "tier": 0,
+          "instruction": {
+            "fr": "Resserre-le pour tenir sur une page, sans perdre un chiffre.",
+            "en": "Tighten it to one page, without losing a figure."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mgr-decision",
+      "role": "manager",
+      "title": {
+        "fr": "Préparer une décision difficile",
+        "en": "Prepare a hard decision"
+      },
+      "desc": {
+        "fr": "Les options et leurs risques, puis une note de décision qui joue l’avocat du diable.",
+        "en": "The options and their risks, then a decision memo that plays devil’s advocate."
+      },
+      "steps": [
+        {
+          "tool": "agy",
+          "role": "plan",
+          "tier": 1,
+          "instruction": {
+            "fr": "Liste les options, leurs avantages et leurs risques.",
+            "en": "List the options, their advantages and their risks."
+          }
+        },
+        {
+          "tool": "claude-code",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Écris la note de décision, avec les objections les plus fortes.",
+            "en": "Write the decision memo, with the strongest objections."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mkt-campaign",
+      "role": "marketing",
+      "title": {
+        "fr": "Une campagne, du terrain au visuel",
+        "en": "A campaign, from research to visual"
+      },
+      "desc": {
+        "fr": "Gemini cherche, Claude écrit les textes, ChatGPT prépare le visuel.",
+        "en": "Gemini researches, Claude writes the copy, ChatGPT prepares the visual."
+      },
+      "steps": [
+        {
+          "tool": "gemini-tasks",
+          "role": "plan",
+          "tier": 1,
+          "instruction": {
+            "fr": "Dans Gemini : recherche sur la cible et les concurrents, avec sources.",
+            "en": "In Gemini: research the audience and competitors, with sources."
+          }
+        },
+        {
+          "tool": "claude-code",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Écris le message, trois accroches et les textes de la campagne.",
+            "en": "Write the message, three hooks and the campaign copy."
+          }
+        },
+        {
+          "tool": "chatgpt-work",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Dans ChatGPT : crée le visuel de la campagne.",
+            "en": "In ChatGPT: create the campaign visual."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mkt-social",
+      "role": "marketing",
+      "title": {
+        "fr": "Une semaine de publications",
+        "en": "A week of posts"
+      },
+      "desc": {
+        "fr": "Sept publications écrites, puis une image pour les plus importantes.",
+        "en": "Seven posts written, then an image for the most important ones."
+      },
+      "steps": [
+        {
+          "tool": "claude-code",
+          "role": "plan",
+          "tier": 1,
+          "instruction": {
+            "fr": "Écris les sept publications, une par jour, avec un appel à l’action.",
+            "en": "Write the seven posts, one per day, each with a call to action."
+          }
+        },
+        {
+          "tool": "chatgpt-work",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Dans ChatGPT : crée une image pour les deux publications clés.",
+            "en": "In ChatGPT: create an image for the two key posts."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mkt-article",
+      "role": "marketing",
+      "title": {
+        "fr": "Un article de blog qui répond à une vraie question",
+        "en": "A blog article that answers a real question"
+      },
+      "desc": {
+        "fr": "Les questions du public d’abord, puis l’article.",
+        "en": "The audience’s questions first, then the article."
+      },
+      "steps": [
+        {
+          "tool": "agy",
+          "role": "plan",
+          "tier": 1,
+          "instruction": {
+            "fr": "Liste les questions que le public se pose et les mots qu’il emploie.",
+            "en": "List the questions the audience asks and the words it uses."
+          }
+        },
+        {
+          "tool": "claude-code",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Écris l’article à partir de ces questions, avec un plan clair.",
+            "en": "Write the article from those questions, with a clear outline."
+          }
+        }
+      ]
+    },
+    {
+      "id": "img-prompt",
+      "role": "image",
+      "title": {
+        "fr": "Une idée devient une image précise",
+        "en": "An idea becomes a precise image"
+      },
+      "desc": {
+        "fr": "Claude détaille votre idée en descriptions soignées, ChatGPT crée l’image.",
+        "en": "Claude turns your idea into careful descriptions, ChatGPT creates the image."
+      },
+      "steps": [
+        {
+          "tool": "claude-code",
+          "role": "plan",
+          "tier": 1,
+          "instruction": {
+            "fr": "Écris trois descriptions détaillées de l’image : sujet, lumière, cadrage, style.",
+            "en": "Write three detailed descriptions of the image: subject, light, framing, style."
+          }
+        },
+        {
+          "tool": "chatgpt-work",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Dans ChatGPT : colle la meilleure description et crée l’image.",
+            "en": "In ChatGPT: paste the best description and create the image."
+          }
+        }
+      ]
+    },
+    {
+      "id": "img-brand",
+      "role": "image",
+      "title": {
+        "fr": "Une série d’images cohérente pour une marque",
+        "en": "A consistent image set for a brand"
+      },
+      "desc": {
+        "fr": "Une charte visuelle écrite, puis les images, avec Gemini en variante.",
+        "en": "A written visual guide, then the images, with Gemini as a variant."
+      },
+      "steps": [
+        {
+          "tool": "claude-code",
+          "role": "plan",
+          "tier": 1,
+          "instruction": {
+            "fr": "Écris la ligne visuelle (couleurs, style, cadrage) et quatre descriptions d’images.",
+            "en": "Write the visual line (colours, style, framing) and four image descriptions."
+          }
+        },
+        {
+          "tool": "chatgpt-work",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Dans ChatGPT : crée les quatre images.",
+            "en": "In ChatGPT: create the four images."
+          }
+        },
+        {
+          "tool": "gemini-tasks",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Dans Gemini : crée une variante de la meilleure image, pour comparer.",
+            "en": "In Gemini: create a variant of the best image, to compare."
+          }
+        }
+      ]
+    },
+    {
+      "id": "img-product",
+      "role": "image",
+      "title": {
+        "fr": "Une photo produit mise en scène",
+        "en": "A staged product photo"
+      },
+      "desc": {
+        "fr": "La scène est décrite avec soin, puis Gemini crée l’image.",
+        "en": "The scene is described with care, then Gemini creates the image."
+      },
+      "steps": [
+        {
+          "tool": "claude-code",
+          "role": "plan",
+          "tier": 1,
+          "instruction": {
+            "fr": "Décris la scène pour une photo produit : décor, lumière, angle, accessoires.",
+            "en": "Describe the scene for a product photo: setting, light, angle, props."
+          }
+        },
+        {
+          "tool": "gemini-tasks",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Dans Gemini : crée l’image à partir de la description.",
+            "en": "In Gemini: create the image from the description."
+          }
+        }
+      ]
+    },
+    {
+      "id": "vid-script",
+      "role": "video",
+      "title": {
+        "fr": "Du script au clip",
+        "en": "From script to clip"
+      },
+      "desc": {
+        "fr": "Claude écrit le script et le découpage plan par plan, Gemini crée la vidéo.",
+        "en": "Claude writes the script and the shot list, Gemini creates the video."
+      },
+      "steps": [
+        {
+          "tool": "claude-code",
+          "role": "plan",
+          "tier": 1,
+          "instruction": {
+            "fr": "Écris le script et le découpage plan par plan.",
+            "en": "Write the script and the shot-by-shot list."
+          }
+        },
+        {
+          "tool": "gemini-tasks",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Dans Gemini : crée la vidéo à partir du découpage.",
+            "en": "In Gemini: create the video from the shot list."
+          }
+        }
+      ]
+    },
+    {
+      "id": "vid-short",
+      "role": "video",
+      "title": {
+        "fr": "Une vidéo courte pour les réseaux",
+        "en": "A short video for social networks"
+      },
+      "desc": {
+        "fr": "Des idées d’accroche, un script de trente secondes, puis la vidéo.",
+        "en": "Hook ideas, a thirty-second script, then the video."
+      },
+      "steps": [
+        {
+          "tool": "agy",
+          "role": "plan",
+          "tier": 1,
+          "instruction": {
+            "fr": "Propose dix idées d’accroche pour les trois premières secondes.",
+            "en": "Suggest ten hook ideas for the first three seconds."
+          }
+        },
+        {
+          "tool": "claude-code",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Écris le script de trente secondes avec la meilleure accroche.",
+            "en": "Write the thirty-second script with the best hook."
+          }
+        },
+        {
+          "tool": "gemini-tasks",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Dans Gemini : crée la vidéo.",
+            "en": "In Gemini: create the video."
+          }
+        }
+      ]
+    },
+    {
+      "id": "vid-explainer",
+      "role": "video",
+      "title": {
+        "fr": "Une vidéo qui explique",
+        "en": "An explainer video"
+      },
+      "desc": {
+        "fr": "Un plan et une voix off, des images de storyboard, puis la vidéo.",
+        "en": "An outline and a narration, storyboard images, then the video."
+      },
+      "steps": [
+        {
+          "tool": "claude-code",
+          "role": "plan",
+          "tier": 1,
+          "instruction": {
+            "fr": "Écris le plan, le texte de la voix off et la liste des plans.",
+            "en": "Write the outline, the narration text and the list of shots."
+          }
+        },
+        {
+          "tool": "chatgpt-work",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Dans ChatGPT : crée les images du storyboard.",
+            "en": "In ChatGPT: create the storyboard images."
+          }
+        },
+        {
+          "tool": "gemini-tasks",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Dans Gemini : crée la vidéo à partir du storyboard.",
+            "en": "In Gemini: create the video from the storyboard."
+          }
+        }
+      ]
+    },
+    {
+      "id": "res-landscape",
+      "role": "research",
+      "title": {
+        "fr": "Faire le tour d’un sujet, sources à l’appui",
+        "en": "Survey a topic, with sources"
+      },
+      "desc": {
+        "fr": "Gemini cherche sur le web, puis deux outils synthétisent et vérifient.",
+        "en": "Gemini searches the web, then two tools synthesise and check."
+      },
+      "steps": [
+        {
+          "tool": "gemini-tasks",
+          "role": "plan",
+          "tier": 1,
+          "instruction": {
+            "fr": "Dans Gemini : cherche sur le web et note chaque source.",
+            "en": "In Gemini: search the web and note every source."
+          }
+        },
+        {
+          "tool": "agy",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Synthétise ce qui a été trouvé et signale les contradictions.",
+            "en": "Synthesise what was found and flag contradictions."
+          }
+        },
+        {
+          "tool": "claude-code",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Écris la note finale et dis ce qui reste à vérifier.",
+            "en": "Write the final note and say what is left to verify."
+          }
+        }
+      ]
+    },
+    {
+      "id": "res-reading",
+      "role": "research",
+      "title": {
+        "fr": "Lire un article scientifique de près",
+        "en": "Read a scientific paper closely"
+      },
+      "desc": {
+        "fr": "Un résumé fidèle, puis une lecture critique : méthode, limites, suites.",
+        "en": "A faithful summary, then a critical reading: method, limits, next steps."
+      },
+      "steps": [
+        {
+          "tool": "agy",
+          "role": "plan",
+          "tier": 1,
+          "instruction": {
+            "fr": "Résume l’article sans rien y ajouter : question, méthode, résultats.",
+            "en": "Summarise the paper without adding anything: question, method, results."
+          }
+        },
+        {
+          "tool": "claude-code",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Lis-le avec esprit critique : limites, biais possibles, questions ouvertes.",
+            "en": "Read it critically: limits, possible biases, open questions."
+          }
+        }
+      ]
+    },
+    {
+      "id": "res-compare",
+      "role": "research",
+      "title": {
+        "fr": "Comparer des options dans un tableau",
+        "en": "Compare options in a table"
+      },
+      "desc": {
+        "fr": "ChatGPT cherche les faits, Claude les range dans un tableau honnête.",
+        "en": "ChatGPT looks up the facts, Claude sets them in an honest table."
+      },
+      "steps": [
+        {
+          "tool": "chatgpt-work",
+          "role": "plan",
+          "tier": 1,
+          "instruction": {
+            "fr": "Dans ChatGPT : rassemble les faits sur chaque option, avec liens.",
+            "en": "In ChatGPT: gather the facts on each option, with links."
+          }
+        },
+        {
+          "tool": "claude-code",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Range-les dans un tableau et dis ce qui n’est pas établi.",
+            "en": "Set them in a table and say what is not established."
+          }
+        }
+      ]
+    },
+    {
+      "id": "stu-explain",
+      "role": "student",
+      "title": {
+        "fr": "Comprendre une notion, puis s’interroger",
+        "en": "Understand a concept, then quiz yourself"
+      },
+      "desc": {
+        "fr": "Une explication à trois niveaux, puis des questions pour vérifier.",
+        "en": "An explanation at three levels, then questions to check."
+      },
+      "steps": [
+        {
+          "tool": "claude-code",
+          "role": "plan",
+          "tier": 1,
+          "instruction": {
+            "fr": "Explique la notion en trois niveaux : image simple, définition, exemple chiffré.",
+            "en": "Explain the concept at three levels: simple picture, definition, worked example."
+          }
+        },
+        {
+          "tool": "agy",
+          "role": "single",
+          "tier": 0,
+          "instruction": {
+            "fr": "Pose cinq questions pour vérifier que c’est compris, avec les réponses à la fin.",
+            "en": "Ask five questions to check understanding, with the answers at the end."
+          }
+        }
+      ]
+    },
+    {
+      "id": "stu-revision",
+      "role": "student",
+      "title": {
+        "fr": "Une fiche de révision et des cartes",
+        "en": "A revision sheet and flashcards"
+      },
+      "desc": {
+        "fr": "Vos notes deviennent une fiche, puis des cartes de mémorisation.",
+        "en": "Your notes become a sheet, then memory flashcards."
+      },
+      "steps": [
+        {
+          "tool": "claude-code",
+          "role": "plan",
+          "tier": 1,
+          "instruction": {
+            "fr": "Écris la fiche : l’essentiel en une page, les formules et les définitions.",
+            "en": "Write the sheet: the essentials on one page, formulas and definitions."
+          }
+        },
+        {
+          "tool": "agy",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Crée vingt cartes question-réponse à partir de la fiche.",
+            "en": "Create twenty question-and-answer cards from the sheet."
+          }
+        }
+      ]
+    },
+    {
+      "id": "stu-essay",
+      "role": "student",
+      "title": {
+        "fr": "Améliorer sa dissertation sans la faire écrire",
+        "en": "Improve your essay without having it written"
+      },
+      "desc": {
+        "fr": "Des contre-arguments, puis un retour sur la structure : le texte reste le vôtre.",
+        "en": "Counter-arguments, then feedback on structure: the text stays yours."
+      },
+      "steps": [
+        {
+          "tool": "agy",
+          "role": "plan",
+          "tier": 1,
+          "instruction": {
+            "fr": "Trouve les contre-arguments les plus sérieux à ma thèse.",
+            "en": "Find the most serious counter-arguments to my thesis."
+          }
+        },
+        {
+          "tool": "claude-code",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Donne un retour sur la structure et la clarté, sans réécrire le texte.",
+            "en": "Give feedback on structure and clarity, without rewriting the text."
+          }
+        }
+      ]
+    },
+    {
+      "id": "ent-idea",
+      "role": "entrepreneur",
+      "title": {
+        "fr": "Tester une idée d’entreprise",
+        "en": "Test a business idea"
+      },
+      "desc": {
+        "fr": "Le marché d’abord, puis un modèle économique d’une page, puis les risques.",
+        "en": "The market first, then a one-page business model, then the risks."
+      },
+      "steps": [
+        {
+          "tool": "gemini-tasks",
+          "role": "plan",
+          "tier": 1,
+          "instruction": {
+            "fr": "Dans Gemini : cherche la taille du marché, les concurrents et les prix, avec sources.",
+            "en": "In Gemini: look up market size, competitors and prices, with sources."
+          }
+        },
+        {
+          "tool": "claude-code",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Écris le modèle économique sur une page : clients, offre, revenus, coûts.",
+            "en": "Write the business model on one page: customers, offer, revenue, costs."
+          }
+        },
+        {
+          "tool": "agy",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Liste les dix risques les plus sérieux et comment les tester à peu de frais.",
+            "en": "List the ten most serious risks and how to test them cheaply."
+          }
+        }
+      ]
+    },
+    {
+      "id": "ent-pitch",
+      "role": "entrepreneur",
+      "title": {
+        "fr": "Préparer un pitch et ses questions difficiles",
+        "en": "Prepare a pitch and its tough questions"
+      },
+      "desc": {
+        "fr": "Un pitch d’une minute, puis les questions qu’un investisseur posera.",
+        "en": "A one-minute pitch, then the questions an investor will ask."
+      },
+      "steps": [
+        {
+          "tool": "claude-code",
+          "role": "plan",
+          "tier": 1,
+          "instruction": {
+            "fr": "Écris un pitch d’une minute, clair et sans jargon.",
+            "en": "Write a one-minute pitch, clear and jargon-free."
+          }
+        },
+        {
+          "tool": "agy",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Pose les dix questions les plus dures qu’on me fera, avec des pistes de réponse.",
+            "en": "Ask the ten toughest questions I will be asked, with answer leads."
+          }
+        }
+      ]
+    },
+    {
+      "id": "ent-offer",
+      "role": "entrepreneur",
+      "title": {
+        "fr": "Une offre claire et son prix",
+        "en": "A clear offer and its price"
+      },
+      "desc": {
+        "fr": "Trois formules de prix, puis la page de vente et son visuel.",
+        "en": "Three pricing options, then the sales page and its visual."
+      },
+      "steps": [
+        {
+          "tool": "claude-code",
+          "role": "plan",
+          "tier": 1,
+          "instruction": {
+            "fr": "Propose trois formules de prix et explique laquelle mettre en avant.",
+            "en": "Suggest three pricing options and explain which to feature."
+          }
+        },
+        {
+          "tool": "claude-code",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Écris la page de vente de la formule choisie.",
+            "en": "Write the sales page for the chosen option."
+          }
+        },
+        {
+          "tool": "chatgpt-work",
+          "role": "single",
+          "tier": 1,
+          "instruction": {
+            "fr": "Dans ChatGPT : crée l’image principale de la page.",
+            "en": "In ChatGPT: create the main image of the page."
+          }
+        }
+      ]
+    }
+  ],
+  "atlas": [
+    {
+      "tool": "claude-code",
+      "vendor": "anthropic",
+      "strengths": [
+        {
+          "fr": "Bon pour lire un projet entier et le modifier avec méthode.",
+          "en": "Good at reading a whole project and changing it step by step."
+        },
+        {
+          "fr": "Bon pour rédiger des textes structurés et longs.",
+          "en": "Good at writing long, structured texts."
+        },
+        {
+          "fr": "Bon pour expliquer une démarche pas à pas.",
+          "en": "Good at explaining an approach step by step."
+        }
+      ]
+    },
+    {
+      "tool": "codex",
+      "vendor": "openai",
+      "strengths": [
+        {
+          "fr": "Bon pour relire du code avec un regard indépendant de celui de Claude.",
+          "en": "Good at reviewing code with a view independent from Claude’s."
+        },
+        {
+          "fr": "Bon pour chercher la cause d’un bug.",
+          "en": "Good at looking for the cause of a bug."
+        },
+        {
+          "fr": "Bon pour des modifications précises et ciblées.",
+          "en": "Good at precise, targeted changes."
+        }
+      ]
+    },
+    {
+      "tool": "agy",
+      "vendor": "google",
+      "strengths": [
+        {
+          "fr": "Bon pour lire de longs documents et en tirer l’essentiel.",
+          "en": "Good at reading long documents and pulling out the essentials."
+        },
+        {
+          "fr": "Bon pour répondre vite à une question simple.",
+          "en": "Good at answering a simple question quickly."
+        },
+        {
+          "fr": "Bon pour lister des options, des risques, des questions.",
+          "en": "Good at listing options, risks, questions."
+        }
+      ]
+    },
+    {
+      "tool": "cowork",
+      "vendor": "anthropic",
+      "strengths": [
+        {
+          "fr": "Bon pour travailler sur des documents et des fichiers que vous y déposez.",
+          "en": "Good at working on documents and files you upload there."
+        },
+        {
+          "fr": "Bon pour rédiger et reformuler avec un échange en plusieurs tours.",
+          "en": "Good at writing and rewording over several turns."
+        }
+      ]
+    },
+    {
+      "tool": "chatgpt-work",
+      "vendor": "openai",
+      "strengths": [
+        {
+          "fr": "Bon pour créer des images à partir d’une description.",
+          "en": "Good at creating images from a description."
+        },
+        {
+          "fr": "Bon pour chercher des faits sur le web et donner des liens.",
+          "en": "Good at looking up facts on the web and giving links."
+        },
+        {
+          "fr": "Bon pour analyser un fichier que vous déposez.",
+          "en": "Good at analysing a file you upload."
+        }
+      ]
+    },
+    {
+      "tool": "gemini-tasks",
+      "vendor": "google",
+      "strengths": [
+        {
+          "fr": "Bon pour chercher sur le web et citer ses sources.",
+          "en": "Good at searching the web and citing its sources."
+        },
+        {
+          "fr": "Bon pour créer des vidéos et des images, selon votre formule.",
+          "en": "Good at creating videos and images, depending on your plan."
+        }
+      ]
+    }
+  ]
+}

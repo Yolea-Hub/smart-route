@@ -1,0 +1,46 @@
+appId: ai.yolea.smartroute
+productName: Smart Route
+directories:
+  output: release
+files:
+  - out/**
+  - out/web/**
+  - package.json
+asar: true
+artifactName: Smart-Route-${version}-${os}-${arch}.${ext}
+linux:
+  target:
+    - target: AppImage
+      arch: x64
+    - target: deb
+      arch: x64
+  category: Development
+  syncDesktopName: true
+  maintainer: Yolea <contact@yolea.ai>
+  synopsis: Smart router for Claude, ChatGPT and Gemini
+win:
+  target:
+    - target: nsis
+      arch: x64
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  perMachine: false
+mac:
+  target:
+    - target: dmg
+      arch: arm64
+    - target: dmg
+      arch: x64
+  category: public.app-category.developer-tools
+  identity: "-"
+  hardenedRuntime: false
+  notarize: false
+electronFuses:
+  runAsNode: false
+  enableNodeOptionsEnvironmentVariable: false
+  enableNodeCliInspectArguments: false
+  onlyLoadAppFromAsar: true
+  enableEmbeddedAsarIntegrityValidation: true
+  enableCookieEncryption: true
+  grantFileProtocolExtraPrivileges: false

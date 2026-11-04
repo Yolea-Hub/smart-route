@@ -1,0 +1,32 @@
+[
+  {
+    "name": "react",
+    "version": "19.3.1",
+    "licence": "MIT",
+    "url": "https://react.dev/"
+  },
+  {
+    "name": "react-dom",
+    "version": "19.3.1",
+    "licence": "MIT",
+    "url": "https://react.dev/"
+  },
+  {
+    "name": "scheduler",
+    "version": "0.28.0",
+    "licence": "MIT",
+    "url": "https://react.dev/"
+  },
+  {
+    "name": "ws",
+    "version": "8.22.1",
+    "licence": "MIT",
+    "url": "https://github.com/websockets/ws"
+  },
+  {
+    "name": "zod",
+    "version": "4.6.7",
+    "licence": "MIT",
+    "url": "https://zod.dev"
+  }
+]

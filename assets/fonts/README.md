@@ -1,0 +1,1 @@
+Inter Variable (SIL Open Font License 1.1), copied byte for byte from the Sogoma-approved local install (~/.local/share/fonts/Inter/InterVariable.ttf). Used only by scripts/render-icons.mjs to rasterise text (resvg cannot read woff2).

@@ -1,0 +1,15 @@
+{
+  "name": "smart-route-site-deploy",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "bash ../build.sh",
+    "dry": "GUARD_DRY_RUN=1 wrangler deploy --dry-run",
+    "deploy:site": "bash ../build.sh && bash guard-fresh-build.sh ../dist && wrangler deploy",
+    "tail": "wrangler tail",
+    "rollback": "wrangler rollback"
+  },
+  "devDependencies": {
+    "wrangler": "4.156.0"
+  }
+}

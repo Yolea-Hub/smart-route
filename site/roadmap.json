@@ -1,0 +1,74 @@
+{
+  "_note": "Source of the 'features to fund' board on /soutenir/ and /en/support/. chariowUrl: https URL of the Chariow product, empty until it exists (the button shows 'Bientôt disponible' while empty). sponsorsEnabled: set to true once GitHub Sponsors is enabled for Yolea-Hub. status: idée | à financer | financée | en cours | livrée. issue: URL of the GitHub issue (votes by thumbs-up). Goal labels are plain sentences: no countdown, no progress badge.",
+  "chariowUrl": "",
+  "sponsorsEnabled": false,
+  "sponsorsUrl": "https://github.com/sponsors/Yolea-Hub",
+  "items": [
+    {
+      "id": "signed-builds",
+      "title_fr": "Versions signées pour Windows et macOS",
+      "title_en": "Signed builds for Windows and macOS",
+      "why_fr": "Aujourd'hui, Windows et macOS affichent un avertissement à la première ouverture, parce que le programme n'est pas signé. Les certificats sont payants et se renouvellent chaque année.",
+      "why_en": "Today Windows and macOS show a warning the first time you open the program, because it is not signed. The certificates cost money and are renewed every year.",
+      "goal_label_fr": "Objectif : 400 000 F CFA pour la première année des deux certificats.",
+      "goal_label_en": "Goal: 400,000 F CFA for the first year of both certificates.",
+      "status": "à financer",
+      "issue": "https://github.com/Yolea-Hub/smart-route/issues/1"
+    },
+    {
+      "id": "agent-handoff",
+      "title_fr": "Passage automatique à l'agent de Cowork ou de ChatGPT",
+      "title_en": "Automatic hand-off to the Cowork or ChatGPT agent",
+      "why_fr": "Pour les tâches d'images, de vidéo ou de bureautique, Smart Route prépare le texte et vous le passez à la main à l'outil web. Nous voudrions que le passage se fasse sans copier-coller, avec votre accord à chaque étape.",
+      "why_en": "For image, video or office tasks, Smart Route prepares the text and you pass it by hand to the web tool. We would like the hand-off to happen without copy and paste, with your approval at each step.",
+      "goal_label_fr": "Objectif : à chiffrer après un premier essai.",
+      "goal_label_en": "Goal: to be estimated after a first trial.",
+      "status": "idée",
+      "issue": "https://github.com/Yolea-Hub/smart-route/issues/2"
+    },
+    {
+      "id": "team-recipes",
+      "title_fr": "Partage de recettes en équipe",
+      "title_en": "Sharing recipes within a team",
+      "why_fr": "Une équipe qui a trouvé un bon enchaînement d'outils pourrait l'exporter dans un fichier et le donner à ses collègues, sans passer par un serveur.",
+      "why_en": "A team that has found a good sequence of tools could export it to a file and hand it to colleagues, without going through a server.",
+      "goal_label_fr": "Objectif : 300 000 F CFA.",
+      "goal_label_en": "Goal: 300,000 F CFA.",
+      "status": "idée",
+      "issue": "https://github.com/Yolea-Hub/smart-route/issues/3"
+    },
+    {
+      "id": "local-models",
+      "title_fr": "Modèles locaux avec Ollama",
+      "title_en": "Local models with Ollama",
+      "why_fr": "Pour les questions simples ou confidentielles, faire tourner un modèle ouvert sur votre ordinateur, sans abonnement ni connexion à Internet.",
+      "why_en": "For simple or confidential questions, run an open model on your own computer, with no subscription and no Internet connection.",
+      "goal_label_fr": "Objectif : 500 000 F CFA.",
+      "goal_label_en": "Goal: 500,000 F CFA.",
+      "status": "idée",
+      "issue": "https://github.com/Yolea-Hub/smart-route/issues/4"
+    },
+    {
+      "id": "mobile-companion",
+      "title_fr": "Compagnon pour téléphone",
+      "title_en": "Phone companion",
+      "why_fr": "Poser une tâche depuis votre téléphone et la voir s'exécuter sur votre ordinateur, sur votre réseau local, sans que rien ne passe par un serveur de Yolea.",
+      "why_en": "Ask for a task from your phone and watch it run on your computer, over your local network, with nothing going through a Yolea server.",
+      "goal_label_fr": "Objectif : à chiffrer.",
+      "goal_label_en": "Goal: to be estimated.",
+      "status": "idée",
+      "issue": "https://github.com/Yolea-Hub/smart-route/issues/5"
+    },
+    {
+      "id": "more-languages",
+      "title_fr": "Plus de langues : dioula et baoulé",
+      "title_en": "More languages: Dioula and Baoulé",
+      "why_fr": "Une interface en dioula et en baoulé, écrite et relue par des locutrices et locuteurs que nous rémunérons, pas par traduction automatique.",
+      "why_en": "An interface in Dioula and Baoulé, written and checked by native speakers whom we pay, not by machine translation.",
+      "goal_label_fr": "Objectif : 250 000 F CFA pour la traduction et la relecture.",
+      "goal_label_en": "Goal: 250,000 F CFA for translation and review.",
+      "status": "à financer",
+      "issue": "https://github.com/Yolea-Hub/smart-route/issues/6"
+    }
+  ]
+}

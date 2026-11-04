@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" role="img" aria-labelledby="t">
+  <title id="t">Smart Route</title>
+  <!-- For light grounds: three routes converge into one; the Sogoma sun disc (Dawn) sits at the meeting point. -->
+  <g fill="none" stroke="#0A3F3B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20C34 20 38 48 62 48"/><path d="M8 48H62"/><path d="M8 76C34 76 38 48 62 48"/><path d="M62 48H90"/></g>
+  <circle cx="62" cy="48" r="11" fill="#F0A437"/>
+</svg>

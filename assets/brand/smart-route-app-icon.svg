@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024" role="img" aria-labelledby="t">
+  <title id="t">Smart Route</title>
+  <rect width="1024" height="1024" rx="224" fill="#0A3F3B"/>
+  <g transform="translate(76 80) scale(9)">
+    <g fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20C34 20 38 48 62 48"/><path d="M8 48H62"/><path d="M8 76C34 76 38 48 62 48"/><path d="M62 48H90"/></g>
+    <circle cx="62" cy="48" r="11" fill="#F0A437"/>
+  </g>
+</svg>

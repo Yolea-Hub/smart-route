@@ -1,0 +1,14 @@
+node_modules/
+out/
+/dist/
+site/dist/
+__pycache__/
+*.pyc
+release/
+*.log
+.env
+.env.*
+.DS_Store
+coverage/
+.claude/
+.fake-*
